@@ -21,15 +21,11 @@ rawUserText = (mainDir+'/Raw-Indexes/raw-user-text-index.py')
 csvUserText = (mainDir+'/CSV-Indexes/csv-user-text-index.py')
 
 # Data
-
 txtext = [".txt", ".log", ".tmp", ".pdf", ".text"]
-
 target_txt = ''
 target_root_txt = ''
-
 live_path = []
 indexed_path = []
-
 write_request = False
 
 def write_index():

@@ -1,27 +1,23 @@
 import os
-import os.path
 import sys
-from PyQt5.QtWidgets import QApplication, QMainWindow, QPlainTextEdit
-from PyQt5.QtWidgets import QMainWindow, QApplication, QWidget, QPushButton, QAction, QLineEdit, QMessageBox, QLabel, QFileDialog, QAction, QHBoxLayout
-from PyQt5.QtGui import QPainter, QColor, QPen
-from PyQt5.QtGui import QIcon
-from PyQt5.QtGui import QPixmap
-from PyQt5.QtCore import Qt, QTimer
+import time
+import codecs
+import psutil
+import socket
+import os.path
+import subprocess
+import win32com.client
+import distutils.dir_util
+import speech_recognition as sr
+
+from PyQt5.QtWidgets import QMainWindow, QApplication, QPushButton, QLineEdit, QLabel
+from PyQt5.QtCore import Qt
 from PyQt5.QtCore import QThread
 from PyQt5.QtCore import QCoreApplication
-from PyQt5.QtWidgets import QApplication, QWidget, QLabel
 from PyQt5.QtGui import QIcon, QPixmap
 from PyQt5 import QtGui
-import time
-import speech_recognition as sr
-import codecs
-import subprocess
-import psutil
-import distutils.dir_util
-import win32com.client
-import shutil
-import fileinput
-import socket
+from PyQt5 import QtCore
+
 
 # Files
 secondary_key_store = 'secondary-key.tmp'
@@ -55,6 +51,8 @@ user_programs_dir = 'UserPrograms'
 
 # Data
 showHideValue = 0
+show_hide_settings = ()
+sr_active = False
 
 # Threads
 speechRecognitionThread = ()
@@ -139,7 +137,7 @@ target_match = ''
 currentAudioMedia = ''
 media_playing_check = ()
 
-# Assertain Configuration Settings
+# Ascertain Configuration Settings
 check_allow_symbiot_config = False
 check_symbiot_server_port_config = False
 check_symbiot_server_ip_config = False
@@ -235,6 +233,7 @@ drive_7_active_config_Bool = ()
 
 drive_8_active_config = ''
 drive_8_active_config_Bool = ()
+
 
 # Perform Configuration Checks
 def configurationChecksFunction():
@@ -359,8 +358,6 @@ def configurationChecksFunction():
                 wiki_local_server_port_configuration = line.replace('WIKI_LOCAL_SERVER_PORT: ', '')
                 print('local wiki server port:', wiki_local_server_port_configuration)
 
-
-
     # Symbiot Configuration
     with open('config.conf', 'r') as fo:
         for line in fo:
@@ -399,7 +396,6 @@ def configurationChecksFunction():
                     symbiot_mac_configuration = line
                     print('symbiot mac config:', symbiot_mac_configuration)
 
-
     # Audio Configuration
     with open('config.conf', 'r') as fo:
         for line in fo:
@@ -425,9 +421,9 @@ def configurationChecksFunction():
         fo.close()
     if check_index_audio_config == False:
         print('check index audio config: missing/malformed data... creating default configuration')
-        defaultAudioPath = os.path.join(os.path.expanduser('~'),'Music')
+        defaultAudioPath = os.path.join(os.path.expanduser('~'), 'Music')
         with open('config.conf', 'a') as fo:
-            fo.writelines('DIRAUD: '+defaultAudioPath+'\n')
+            fo.writelines('DIRAUD: ' + defaultAudioPath + '\n')
             check_index_audio_config = True
             audio_configuration = defaultAudioPath
         fo.close()
@@ -459,7 +455,7 @@ def configurationChecksFunction():
         print('check index video config: missing/malformed data... creating default configuration')
         defaultVideoPath = os.path.join(os.path.expanduser('~'), 'Videos')
         with open('config.conf', 'a') as fo:
-            fo.writelines('DIRVID: ' + defaultVideoPath+'\n')
+            fo.writelines('DIRVID: ' + defaultVideoPath + '\n')
             check_index_video_config = True
             video_configuration = defaultVideoPath
         fo.close()
@@ -491,7 +487,7 @@ def configurationChecksFunction():
         print('check index image config: missing/malformed data... creating default configuration')
         defaultImagePath = os.path.join(os.path.expanduser('~'), 'Pictures')
         with open('config.conf', 'a') as fo:
-            fo.writelines('DIRIMG: ' + defaultImagePath+'\n')
+            fo.writelines('DIRIMG: ' + defaultImagePath + '\n')
             check_index_image_config = True
             image_configuration = defaultImagePath
         fo.close()
@@ -523,7 +519,7 @@ def configurationChecksFunction():
         print('check index text config: missing/malformed data... creating default configuration')
         defaultTextPath = os.path.join(os.path.expanduser('~'), 'Documents')
         with open('config.conf', 'a') as fo:
-            fo.writelines('DIRTXT: ' + defaultTextPath+'\n')
+            fo.writelines('DIRTXT: ' + defaultTextPath + '\n')
             check_index_text_config = True
             text_configuration = defaultTextPath
         fo.close()
@@ -744,6 +740,7 @@ def configurationChecksFunction():
         defaultDrive8Config = 'null'
         drive8_configuration = defaultDrive8Config
 
+
 def pluginIndexEngineFunction():
     global plugin_active_config_Bool
     global plugin_index_psutil
@@ -759,6 +756,7 @@ def pluginIndexEngineFunction():
         else:
             print('plugin index engine running  :', 'failed')
 
+
 def audioIndexEngineFunction():
     global audio_active_config_Bool
     global audio_index_psutil
@@ -768,12 +766,13 @@ def audioIndexEngineFunction():
             audio_index_engine_proc = subprocess.Popen(cmd, shell=False, startupinfo=info)
             audio_index_engine_pid = audio_index_engine_proc.pid
             audio_index_psutil = psutil.Process(audio_index_engine_pid)
-            print('command:',cmd)
+            print('command:', cmd)
             print('subprocess PID :', audio_index_engine_pid)
             if psutil.pid_exists(audio_index_engine_pid) == True:
                 print('audio index engine running  :', 'yes')
             else:
                 print('audio index engine running  :', 'failed')
+
 
 def imageIndexEngineFunction():
     global image_active_config_Bool
@@ -791,6 +790,7 @@ def imageIndexEngineFunction():
             else:
                 print('image index engine running  :', 'failed')
 
+
 def textIndexEngineFunction():
     global text_active_config_Bool
     global text_index_psutil
@@ -806,6 +806,7 @@ def textIndexEngineFunction():
                 print('text index engine running  :', 'yes')
             else:
                 print('text index engine running  :', 'failed')
+
 
 def videoIndexEngineFunction():
     global video_active_config_Bool
@@ -823,6 +824,7 @@ def videoIndexEngineFunction():
             else:
                 print('video index engine running  :', 'failed')
 
+
 def userProgramsIndexEngineFunction():
     global user_prog_index_engine_psutil
     cmd = ('python ' + 'index-engine-user-programs.py')
@@ -836,6 +838,7 @@ def userProgramsIndexEngineFunction():
     else:
         print('user programs index engine running  :', 'failed')
 
+
 def userDirectoriesIndexEngineFunction():
     global user_directory_index_psutil
     cmd = ('python ' + 'index-engine-user-directory.py')
@@ -848,6 +851,7 @@ def userDirectoriesIndexEngineFunction():
         print('user directories index engine running  :', 'yes')
     else:
         print('user directories index engine running  :', 'failed')
+
 
 def drive1IndexEngineFunction():
     global drive_1_active_config_Bool
@@ -865,6 +869,7 @@ def drive1IndexEngineFunction():
             else:
                 print('drive1 index engine running  :', 'failed')
 
+
 def drive2IndexEngineFunction():
     global drive_2_active_config_Bool
     global drive2_index_psutil
@@ -881,6 +886,7 @@ def drive2IndexEngineFunction():
             else:
                 print('drive2 index engine running  :', 'failed')
 
+
 def drive3IndexEngineFunction():
     global drive_3_active_config_Bool
     global drive3_index_psutil
@@ -896,6 +902,7 @@ def drive3IndexEngineFunction():
                 print('drive3 index engine running  :', 'yes')
             else:
                 print('drive3 index engine running  :', 'failed')
+
 
 def drive4IndexEngineFunction():
     global drive_4_active_config_Bool
@@ -914,6 +921,7 @@ def drive4IndexEngineFunction():
             else:
                 print('drive4 index engine running  :', 'failed')
 
+
 def drive5IndexEngineFunction():
     global drive_5_active_config_Bool
     global drive5_index_psutil
@@ -930,6 +938,7 @@ def drive5IndexEngineFunction():
                 print('drive5 index engine running  :', 'yes')
             else:
                 print('drive5 index engine running  :', 'failed')
+
 
 def drive6IndexEngineFunction():
     global drive_6_active_config_Bool
@@ -948,6 +957,7 @@ def drive6IndexEngineFunction():
             else:
                 print('drive6 index engine running  :', 'failed')
 
+
 def drive7IndexEngineFunction():
     global drive_7_active_config_Bool
     global drive7_index_psutil
@@ -965,6 +975,7 @@ def drive7IndexEngineFunction():
             else:
                 print('drive7 index engine running  :', 'failed')
 
+
 def drive8IndexEngineFunction():
     global drive_8_active_config_Bool
     global drive8_index_psutil
@@ -981,6 +992,7 @@ def drive8IndexEngineFunction():
                 print('drive8 index engine running  :', 'yes')
             else:
                 print('drive8 index engine running  :', 'failed')
+
 
 def runIndexEnginesFunction():
     configurationChecksFunction()
@@ -1000,6 +1012,7 @@ def runIndexEnginesFunction():
     drive8IndexEngineFunction()
     userDirectoriesIndexEngineFunction()
 
+
 def findDictateWikipediaTranscriptFunction():
     stopTranscriptionFunction()
     if len(stop_transcription_psutil) >= 0:
@@ -1010,6 +1023,7 @@ def findDictateWikipediaTranscriptFunction():
     stpid = stprocess.pid
     stop_transcription_psutil.append(psutil.Process(stpid))
     print('subprocess PID:', stpid)
+
 
 def findDictateAnyTranscriptFunction():
     stopTranscriptionFunction()
@@ -1022,6 +1036,7 @@ def findDictateAnyTranscriptFunction():
     stop_transcription_psutil.append(psutil.Process(atpid))
     print('subprocess PID:', atpid)
 
+
 def listTranscriptionsFunction():
     stopTranscriptionFunction()
     if len(list_transcriptions_psutil) >= 0:
@@ -1032,6 +1047,7 @@ def listTranscriptionsFunction():
     list_transcriptions_pid = ltprocess.pid
     list_transcriptions_psutil.append(psutil.Process(list_transcriptions_pid))
     print('subprocess PID:', list_transcriptions_pid)
+
 
 def getLatestTranscriptionFunction():
     stopTranscriptionFunction()
@@ -1044,6 +1060,7 @@ def getLatestTranscriptionFunction():
     get_latest_transcriptions_psutil.append(psutil.Process(get_latest_transcription_pid))
     print('subprocess PID:', get_latest_transcription_pid)
 
+
 def removeBookmarkFunction():
     stopTranscriptionFunction()
     if len(remove_bookmark_psutil) >= 0:
@@ -1054,6 +1071,7 @@ def removeBookmarkFunction():
     remove_bookmark_pid = rbprocess.pid
     remove_bookmark_psutil.append(psutil.Process(remove_bookmark_pid))
     print('subprocess PID:', remove_bookmark_pid)
+
 
 def askGoogleTranscriptionFunction():
     stopTranscriptionFunction()
@@ -1066,6 +1084,7 @@ def askGoogleTranscriptionFunction():
     ask_google_psutil.append(psutil.Process(ask_google_pid))
     print('subprocess PID:', ask_google_pid)
 
+
 def wiktionaryDefineFunction():
     stopTranscriptionFunction()
     if len(wiktionary_define_psutil) >= 0:
@@ -1077,23 +1096,30 @@ def wiktionaryDefineFunction():
     wiktionary_define_psutil.append(psutil.Process(wiktionary_define_pid))
     print('subprocess PID:', wiktionary_define_pid)
 
+
 def findOpenAudioFunction():
     findOpenAudioThread.start()
+
 
 def openDirectoryFunction():
     openDirectoryThread.start()
 
+
 def findOpenImageFunction():
     findOpenImageThread.start()
+
 
 def findOpenTextFunction():
     findOpenTextThread.start()
 
+
 def findOpenVideoFunction():
     findOpenVideoThread.start()
 
+
 def findOpenProgramFunction():
     findOpenProgramThread.start()
+
 
 def stopTranscriptionFunction():
     try:
@@ -1127,12 +1153,14 @@ def stopTranscriptionFunction():
     except:
         pass
 
+
 def stopIndexingPluginsFunction():
     try:
         print('killing index engine process:', plugin_index_psutil)
         plugin_index_psutil.kill()
     except:
         pass
+
 
 def stopIndexingAudioFunction():
     try:
@@ -1141,12 +1169,14 @@ def stopIndexingAudioFunction():
     except:
         pass
 
+
 def stopIndexingImageFunction():
     try:
         print('killing index engine process:', image_index_psutil)
         image_index_psutil.kill()
     except:
         pass
+
 
 def stopIndexinTextFunction():
     try:
@@ -1155,12 +1185,14 @@ def stopIndexinTextFunction():
     except:
         pass
 
+
 def stopIndexingVideoFunction():
     try:
         print('killing index engine process:', video_index_psutil)
         video_index_psutil.kill()
     except:
         pass
+
 
 def stopIndexingUserProgramsFunction():
     try:
@@ -1169,12 +1201,14 @@ def stopIndexingUserProgramsFunction():
     except:
         pass
 
+
 def stopIndexingUserDirectoryFunction():
     try:
         print('killing index engine process:', user_directory_index_psutil)
         user_directory_index_psutil.kill()
     except:
         pass
+
 
 def stopIndexingDrive1Function():
     try:
@@ -1183,12 +1217,14 @@ def stopIndexingDrive1Function():
     except:
         pass
 
+
 def stopIndexingDrive2Function():
     try:
         print('killing index engine process:', drive2_index_psutil)
         drive2_index_psutil.kill()
     except:
         pass
+
 
 def stopIndexingDrive3Function():
     try:
@@ -1197,12 +1233,14 @@ def stopIndexingDrive3Function():
     except:
         pass
 
+
 def stopIndexingDrive4Function():
     try:
         print('killing index engine process:', drive4_index_psutil)
         drive4_index_psutil.kill()
     except:
         pass
+
 
 def stopIndexingDrive5Function():
     try:
@@ -1211,12 +1249,14 @@ def stopIndexingDrive5Function():
     except:
         pass
 
+
 def stopIndexingDrive6Function():
     try:
         print('killing index engine process:', drive6_index_psutil)
         drive6_index_psutil.kill()
     except:
         pass
+
 
 def stopIndexingDrive7Function():
     try:
@@ -1225,12 +1265,14 @@ def stopIndexingDrive7Function():
     except:
         pass
 
+
 def stopIndexingDrive8Function():
     try:
         print('killing index engine process:', drive8_index_psutil)
         drive8_index_psutil.kill()
     except:
         pass
+
 
 def stopIndexingFunction():
     stopIndexingPluginsFunction()
@@ -1249,14 +1291,15 @@ def stopIndexingFunction():
     stopIndexingDrive7Function()
     stopIndexingDrive8Function()
 
+
 internal_commands_list = {'stop transcription': stopTranscriptionFunction,
-                          'search wikipedia': findDictateWikipediaTranscriptFunction,  # dictate/retrieve from wiki & dictate
-                          'transcriptions available for': listTranscriptionsFunction, # list stored transcriptions
-                          'latest transcription for': getLatestTranscriptionFunction, # dictate most recent transcription
-                          'remove bookmark': removeBookmarkFunction,  # reset specified bookmark file to zero '0'
+                          'search wikipedia': findDictateWikipediaTranscriptFunction,
+                          'transcriptions available for': listTranscriptionsFunction,
+                          'latest transcription for': getLatestTranscriptionFunction,
+                          'remove bookmark': removeBookmarkFunction,
                           'define': wiktionaryDefineFunction,
                           'ask google': askGoogleTranscriptionFunction,
-                          'play audio': findOpenAudioFunction,  # say media audio/image/text/video followed by name
+                          'play audio': findOpenAudioFunction,
                           'directory': openDirectoryFunction,
                           'open image': findOpenImageFunction,
                           'open text': findOpenTextFunction,
@@ -1281,6 +1324,7 @@ key_word = ['stop transcription',
             'transcription',
             ]
 
+
 class App(QMainWindow):
     def __init__(self):
         super(App, self).__init__()
@@ -1301,16 +1345,33 @@ class App(QMainWindow):
         self.symbiotIPEditable = False
         self.symbiotMACEditable = False
         self.wikiServerIPEditable = False
-        self.wikiServerPortEditable =False
+        self.wikiServerPortEditable = False
         self.title = "Information & Control System'"
-        self.left = 0
-        self.top = 0
-        self.width = 780
-        self.height = 185
+
+        # minimal Geometry
+        self.minimal_left = 547
+        self.minimal_top = 0
+        self.minimal_width = 826
+        self.minimal_height = 144
+
+        # minimal Geometry + settings
+        self.minimal_extra_left = 547
+        self.minimal_extra_top = 0
+        self.minimal_extra_width = 826
+        self.minimal_extra_height = 400
+
+        # Full Screen Geometry
+        self.left_max = 0
+        self.top_max = 0
+        self.width_max = 1920
+        self.height_max = 1080
+
+
+
         p = self.palette()
         p.setColor(self.backgroundRole(), Qt.black)
         self.setPalette(p)
-        #self.setWindowOpacity(0.5)
+        # self.setWindowOpacity(0.75)
 
         self.initUI()
 
@@ -1339,51 +1400,101 @@ class App(QMainWindow):
         global wiki_local_server_ip_configuration_Bool
         global wiki_local_server_port_configuration_Bool
         global guiMode1Thread
+        global show_hide_settings
+        global sr_active
 
-        #UI Geometry
+        # UI Geometry
         self.setWindowTitle('Information & Control System')
-        self.setGeometry(self.left, self.top, self.width, self.height)
-        self.setFixedSize(self.width, self.height)
-        self.setWindowIcon(QtGui.QIcon("./Resources/test_icon.ico"))
-        #Close
+        # self.setWindowFlags(Qt.Window | Qt.FramelessWindowHint)
+        self.setWindowFlags(QtCore.Qt.CustomizeWindowHint)
+
+        # # max
+        # self.setGeometry(self.left_max, self.top_max, self.width_max, self.height_max)
+        # self.setFixedSize(self.width_max, self.height_max)
+
+        # min
+        self.setGeometry(self.minimal_left, self.minimal_top, self.minimal_width, self.minimal_height)
+        self.setFixedSize(self.minimal_width, self.minimal_height)
+
+        self.setWindowIcon(QtGui.QIcon("./Resources/logo_icon.ico"))
+
+        # oImage = QImage("./Resources/main_dash_background_image4.png")
+        # sImage = oImage.scaled(QSize(1920, 1080))  # resize Image to widgets size
+        # palette = QPalette()
+        # palette.setBrush(10, QBrush(sImage))  # 10 = Windowrole
+        # self.setPalette(palette)
+
+        # Close
         self.exitClose = QPushButton(self)
-        self.exitClose.move(740, 0)
-        self.exitClose.resize(25, 25)
+        self.exitClose.move(778, 0)
+        self.exitClose.resize(48, 24)
         self.exitClose.clicked.connect(stopIndexingFunction)
         self.exitClose.clicked.connect(stopTranscriptionFunction)
         self.exitClose.clicked.connect(QCoreApplication.instance().quit)
-        self.exitClose.setIcon(QIcon("./Resources/main-close.png"))
         self.exitClose.setStyleSheet(
-            """QPushButton {background-color: rgb(0, 0,0);
+            """QPushButton {background-color: rgb(255, 0,0);
            border:1px solid rgb(0, 0, 0);}"""
         )
         # Hide
         self.hiddenButton = QPushButton(self)
-        self.hiddenButton.move(695, 0)
-        self.hiddenButton.resize(25, 25)
+        self.hiddenButton.move(730, 0)
+        self.hiddenButton.resize(48, 24)
         self.hiddenButton.clicked.connect(self.showMinimized)
-        self.hiddenButton.setIcon(QIcon("./Resources/main-minimise.png"))
         self.hiddenButton.setStyleSheet(
-            """QPushButton {background-color: rgb(0, 0,0);
+            """QPushButton {background-color: rgb(0, 0,255);
            border:1px solid rgb(0, 0, 0);}"""
         )
 
-        #Main Menu Button
-        incrementalResizeButton = QPushButton(self)
-        incrementalResizeButton.move(20, 25)
-        incrementalResizeButton.resize(20, 20)
-        incrementalResizeButton.clicked.connect(self.incrementalResizeFunction)
-        incrementalResizeButton.setIcon(QIcon("./Resources/main-menu.png"))
-        incrementalResizeButton.setStyleSheet(
-            """QPushButton{background-color: rgb(0, 0, 0);
-           border:1px solid rgb(0, 0, 0);}"""
+        # Settings Title
+        self.settings_menu_title = QLabel(self)
+        self.settings_menu_title.move(100, 24)
+        self.settings_menu_title.resize(300, 96)
+        newfont = QtGui.QFont("Times", 48, QtGui.QFont.Bold)
+        self.settings_menu_title.setFont(newfont)
+        self.settings_menu_title.setText("Settings")
+        self.settings_menu_title.setStyleSheet(
+            """QLabel {background-color: rgb(0, 0, 0);
+           color: yellow;
+           border: false;}"""
         )
+        self.settings_menu_title.hide()
+
+        # Settings Menu
+        show_hide_settings = QPushButton(self)
+        show_hide_settings.move(3, 30)
+        show_hide_settings.resize(48, 48)
+        show_hide_settings.clicked.connect(self.showHideSettingsFunction)
+        show_hide_settings.setIcon(QIcon("./Resources/image/setting_menu_icon.png"))
+        show_hide_settings.setStyleSheet(
+            """QPushButton{background-color: rgb(0, 0, 0);
+           border:1px solid rgb(0, 0, 255);}"""
+        )
+
+        def srActiveFunction():
+            if sr_active == False:
+                speechRecognitionOnFunction()
+            elif sr_active == True:
+                speechRecognitionOffFunction()
 
         def speechRecognitionOnFunction():
+            global sr_active
+            sr_active = True
+            self.srOnButton.setIcon(QIcon("./Resources/image/voice_image_icon.png"))
+            self.srOnButton.setStyleSheet(
+                """QPushButton {background-color: rgb(0, 0, 0);
+                border:1px solid rgb(0, 255, 0);}"""
+            )
             speechRecognitionThread.start()
             print('speech recognition: on')
 
         def speechRecognitionOffFunction():
+            global sr_active
+            sr_active = False
+            self.srOnButton.setIcon(QIcon("./Resources/image/voice_image_icon.png"))
+            self.srOnButton.setStyleSheet(
+                """QPushButton {background-color: rgb(0, 0, 0);
+                border:1px solid rgb(0, 0, 255);}"""
+            )
             speechRecognitionThread.stop_sr()
             guiControllerOffFunction()
             print('speech recognition: off')
@@ -1402,8 +1513,7 @@ class App(QMainWindow):
                 symbiot_configuration_Bool = True
                 symbiotButton.setStyleSheet(
                     """QPushButton {background-color: rgb(0, 0, 0);
-                    color: green;
-                    border:1px solid rgb(0, 0, 0);}"""
+                    border:1px solid rgb(0, 255, 0);}"""
                 )
 
             elif symbiot_configuration_Bool == True:
@@ -1412,160 +1522,151 @@ class App(QMainWindow):
                 symbiot_configuration_Bool = False
                 symbiotButton.setStyleSheet(
                     """QPushButton {background-color: rgb(0, 0, 0);
-                    color: red;
-                    border:1px solid rgb(0, 0, 0);}"""
+                    border:1px solid rgb(0, 0, 255);}"""
                 )
 
         # Symbiot On/Off
         symbiotButton = QPushButton(self)
-        symbiotButton.move(680, 50)
-        symbiotButton.resize(60, 15)
+        symbiotButton.move(3, 78)
+        symbiotButton.resize(48, 48)
         symbiotButton.clicked.connect(symbiotEnableDisableFunction)
-        symbiotButton.setText("Symbiot")
         if symbiot_configuration_Bool == True:
+            symbiotButton.setIcon(QIcon("./Resources/image/symbiot_button_icon.png"))
             symbiotButton.setStyleSheet(
-                """QPushButton {background-color: rgb(0, 0, 0);
-               color: green;
+                """QPushButton{background-color: rgb(0, 0, 0);
                border:1px solid rgb(0, 0, 0);}"""
             )
+
             symbiot_configuration_Bool = False
         elif symbiot_configuration_Bool == False:
+            symbiotButton.setIcon(QIcon("./Resources/image/symbiot_button_icon.png"))
             symbiotButton.setStyleSheet(
-                """QPushButton {background-color: rgb(0, 0, 0);
-               color: red;
-               border:1px solid rgb(0, 0, 0);}"""
+                """QPushButton{background-color: rgb(0, 0, 0);
+               border:1px solid rgb(0, 0, 255);}"""
             )
 
-        #Sr on
-        srOnButton = QPushButton(self)
-        srOnButton.move(40, 50)
-        srOnButton.resize(40, 15)
-        srOnButton.clicked.connect(speechRecognitionOnFunction)
-        srOnButton.setText("ON")
-        srOnButton.setStyleSheet(
-            """QPushButton {background-color: rgb(0, 0, 0);
-           color: green;
-           border:1px solid rgb(0, 0, 0);}"""
+        # Sr on
+        self.srOnButton = QPushButton(self)
+        self.srOnButton.move(774, 30)
+        self.srOnButton.resize(48, 48)
+        self.srOnButton.setIcon(QIcon("./Resources/image/voice_image_icon.png"))
+        self.srOnButton.clicked.connect(srActiveFunction)
+        self.srOnButton.setStyleSheet(
+            """QPushButton{background-color: rgb(0, 0, 0);
+           border:1px solid rgb(0, 0, 255);}"""
         )
-        #Sr off
-        srOffButton = QPushButton(self)
-        srOffButton.move(80, 50)
-        srOffButton.resize(40, 15)
-        srOffButton.clicked.connect(speechRecognitionOffFunction)
-        srOffButton.setText("OFF")
-        srOffButton.setStyleSheet(
-            """QPushButton {background-color: rgb(0, 0, 0);
-           color: red;
-           border:1px solid rgb(0, 0, 0);}"""
-        )
+
         # Sr Indicator
-        srIndicator = QLabel(self)
-        srIndicator.move(20, 48)
-        srIndicator.resize(20, 20)
-        pixmap = QPixmap('./Resources/speech-recognition-LEDOff.png')
-        srIndicator.setPixmap(pixmap)
+        self.srIndicator = QLabel(self)
+        self.srIndicator.move(810, 390)
+        self.srIndicator.resize(300, 300)
+        pixmap = QPixmap('./Resources/image/sr_indicator_off_icon.png')
+        self.srIndicator.setPixmap(pixmap)
+        self.srIndicator.hide()
 
         # Create Speech Interpretation Info
-        srInfo = QLineEdit(self)
-        srInfo.move(40, 65)
-        srInfo.resize(700, 20)
-        srInfo.setReadOnly(True)
-        srInfo.setStyleSheet(
+        self.srInfo = QLineEdit(self)
+        self.srInfo.move(70, 30)
+        self.srInfo.resize(700, 20)
+        self.srInfo.setReadOnly(True)
+        self.srInfo.setStyleSheet(
             """QLineEdit {background-color: black;
-            border: false;
+            border:1px solid rgb(0, 0, 255);
+            border-bottom:1px solid rgb(0, 0, 0);
             selection-color: black;
             selection-background-color: black;
             color: rgb(115, 255, 0);}"""
         )
         # Create Speech Interpretation TextBox
-        textBoxValue = QLineEdit(self)
-        textBoxValue.move(40, 85)
-        textBoxValue.resize(700, 20)
-        textBoxValue.setReadOnly(True)
-        textBoxValue.setStyleSheet(
+        self.textBoxValue = QLineEdit(self)
+        self.textBoxValue.move(70, 50)
+        self.textBoxValue.resize(700, 20)
+        self.textBoxValue.setReadOnly(True)
+        self.textBoxValue.setStyleSheet(
             """QLineEdit {background-color: black;
-            border: false;
+            border-top:1px solid rgb(0, 0, 0);
+            border-left:1px solid rgb(0, 0, 255);
+            border-right:1px solid rgb(0, 0, 255);
+            border-bottom:1px solid rgb(0, 0, 0);
             selection-color: black;
             selection-background-color: black;
             color: #00FF00;}"""
         )
+
         # Create verbose textbox
-        textBoxVerbose1 = QLineEdit(self)
-        textBoxVerbose1.move(40, 105)
-        textBoxVerbose1.resize(700, 20)
-        textBoxVerbose1.setReadOnly(True)
-        textBoxVerbose1.setStyleSheet(
+        self.textBoxVerbose1 = QLineEdit(self)
+        self.textBoxVerbose1.move(70, 70)
+        self.textBoxVerbose1.resize(700, 20)
+        self.textBoxVerbose1.setReadOnly(True)
+        self.textBoxVerbose1.setStyleSheet(
             """QLineEdit {background-color: black;
-            border: false;
+            border:1px solid rgb(0, 0, 255);
+            border-top:1px solid rgb(0, 0, 0);
+            border-bottom:1px solid rgb(0, 0, 0);
             selection-color: black;
             selection-background-color: black;
             color: #00FF00;}"""
         )
         # Create verbose textbox2
-        textBoxVerbose2 = QLineEdit(self)
-        textBoxVerbose2.move(40, 125)
-        textBoxVerbose2.resize(700, 20)
-        textBoxVerbose2.setReadOnly(True)
-        textBoxVerbose2.setStyleSheet(
+        self.textBoxVerbose2 = QLineEdit(self)
+        self.textBoxVerbose2.move(70, 90)
+        self.textBoxVerbose2.resize(700, 20)
+        self.textBoxVerbose2.setReadOnly(True)
+        self.textBoxVerbose2.setStyleSheet(
             """QLineEdit {background-color: black;
-            border: false;
+            border:1px solid rgb(0, 0, 255);
+            border-top:1px solid rgb(0, 0, 0);
             selection-color: black;
             selection-background-color: black;
             color: #00FF00;}"""
         )
-        #SETTINGS
+
+        # SETTINGS
         def configInteractionPermissionFunction():
             configInteractionPermissionThread.start()
-        settingsTitle = QLabel(self)
-        settingsTitle.move(285, 180)
-        settingsTitle.resize(150, 20)
-        settingsTitle.setText('   Index Engine Configuration')
-        settingsTitle.setStyleSheet(
-            """QLabel {background-color: rgb(0, 0, 0);
+
+        self.indexTitle = QLabel(self)
+        self.indexTitle.move(70, 148)
+        self.indexTitle.resize(100, 20)
+        self.indexTitle.setText('User Index Settings')
+        self.indexTitle.setStyleSheet(
+            """QLabel {
            color: yellow;
            border: false;}"""
         )
-        indexTitle = QLabel(self)
-        indexTitle.move(130, 180)
-        indexTitle.resize(95, 20)
-        indexTitle.setText('User Index Settings')
-        indexTitle.setStyleSheet(
+        self.indexTitle2 = QLabel(self)
+        self.indexTitle2.move(390, 148)
+        self.indexTitle2.resize(120, 20)
+        self.indexTitle2.setText('Advanced Index Settings')
+        self.indexTitle2.setStyleSheet(
             """QLabel {
-           color: white;
-           border: false;}"""
-        )
-        indexTitle = QLabel(self)
-        indexTitle.move(520, 180)
-        indexTitle.resize(120, 20)
-        indexTitle.setText('Advanced Index Settings')
-        indexTitle.setStyleSheet(
-            """QLabel {
-           color: white;
+           color: yellow;
            border: false;}"""
         )
 
         # Wiki Settings
-        wikiSettingsLabel = QLabel(self)
-        wikiSettingsLabel.move(390, 300)
-        wikiSettingsLabel.resize(100, 20)
-        wikiSettingsLabel.setText('Information Settings')
-        wikiSettingsLabel.setStyleSheet(
+        self.wikiSettingsLabel = QLabel(self)
+        self.wikiSettingsLabel.move(390, 263)
+        self.wikiSettingsLabel.resize(100, 20)
+        self.wikiSettingsLabel.setText('Information Settings')
+        self. wikiSettingsLabel.setStyleSheet(
             """QLabel {
            color: yellow;
            border: false;}"""
         )
         # Wiki show in browser
-        wikiShowBrowserLabel = QLabel(self)
-        wikiShowBrowserLabel.move(375, 330)
-        wikiShowBrowserLabel.resize(135, 20)
-        wikiShowBrowserLabel.setText('Show Wikipedia in Browser?')
-        wikiShowBrowserLabel.setStyleSheet(
+        self.wikiShowBrowserLabel = QLabel(self)
+        self.wikiShowBrowserLabel.move(390, 283)
+        self.wikiShowBrowserLabel.resize(135, 20)
+        self.wikiShowBrowserLabel.setText('Show Wikipedia in Browser?')
+        self.wikiShowBrowserLabel.setStyleSheet(
             """QLabel {
-           color: yellow;
+           color: green;
            border: false;}"""
         )
+
         self.wikiShowBrowserButton = QPushButton(self)
-        self.wikiShowBrowserButton.move(510, 330)
+        self.wikiShowBrowserButton.move(525, 283)
         self.wikiShowBrowserButton.resize(50, 20)
         if wiki_show_browser_Bool == False:
             self.wikiShowBrowserButton.setText('Disabled')
@@ -1582,19 +1683,20 @@ class App(QMainWindow):
                border: false;}"""
             )
         self.wikiShowBrowserButton.clicked.connect(self.wikiShowBrowserFunction)
+        self.wikiShowBrowserButton.hide()
 
         # Dictate Wiki transcripts
-        dictateWikiLabel = QLabel(self)
-        dictateWikiLabel.move(375, 350)
-        dictateWikiLabel.resize(135, 20)
-        dictateWikiLabel.setText('Dictate Wiki Transcripts?')
-        dictateWikiLabel.setStyleSheet(
+        self.dictateWikiLabel = QLabel(self)
+        self.dictateWikiLabel.move(390, 298)
+        self.dictateWikiLabel.resize(135, 20)
+        self.dictateWikiLabel.setText('Dictate Wiki Transcripts?')
+        self.dictateWikiLabel.setStyleSheet(
             """QLabel {
-           color: yellow;
+           color: green;
            border: false;}"""
         )
         self.dictateWikiButton = QPushButton(self)
-        self.dictateWikiButton.move(510, 350)
+        self.dictateWikiButton.move(525, 298)
         self.dictateWikiButton.resize(50, 20)
         if wiki_dictate_Bool == False:
             self.dictateWikiButton.setText('Disabled')
@@ -1611,19 +1713,20 @@ class App(QMainWindow):
                border: false;}"""
             )
         self.dictateWikiButton.clicked.connect(self.dictateWikiFunction)
+        self.dictateWikiButton.hide()
 
         # Enable/Disable USE of Local Wiki Server
-        useLocalWikiLabel = QLabel(self)
-        useLocalWikiLabel.move(375, 370)
-        useLocalWikiLabel.resize(135, 20)
-        useLocalWikiLabel.setText('Use Local Wiki Server?')
-        useLocalWikiLabel.setStyleSheet(
+        self.useLocalWikiLabel = QLabel(self)
+        self.useLocalWikiLabel.move(390, 313)
+        self.useLocalWikiLabel.resize(135, 20)
+        self.useLocalWikiLabel.setText('Use Local Wiki Server?')
+        self.useLocalWikiLabel.setStyleSheet(
             """QLabel {
-           color: yellow;
+           color: green;
            border: false;}"""
         )
         self.useLocalWikiButton = QPushButton(self)
-        self.useLocalWikiButton.move(510, 370)
+        self.useLocalWikiButton.move(525, 313)
         self.useLocalWikiButton.resize(50, 20)
         if allow_wiki_local_server_Bool == False:
             self.useLocalWikiButton.setText('Disabled')
@@ -1642,22 +1745,22 @@ class App(QMainWindow):
         self.useLocalWikiButton.clicked.connect(self.useLocalWikiFunction)
 
         # Wiki Server IP Button
-        wikiServerIPButton = QPushButton(self)
-        wikiServerIPButton.move(570, 330)
-        wikiServerIPButton.resize(75, 20)
-        wikiServerIPButton.setText('Wiki Server')
-        wikiServerIPButton.clicked.connect(self.wikiServerIPFunction)
-        wikiServerIPButton.setStyleSheet(
+        self.wikiServerIPButton = QPushButton(self)
+        self.wikiServerIPButton.move(570, 283)
+        self.wikiServerIPButton.resize(75, 20)
+        self.wikiServerIPButton.setText('Wiki Server')
+        self.wikiServerIPButton.clicked.connect(self.wikiServerIPFunction)
+        self.wikiServerIPButton.setStyleSheet(
             """QPushButton {background-color: rgb(0, 0, 0);
-           color: yellow;
+           color: green;
            border: false;}"""
         )
         # Wiki Server IP Edit
         self.wikiServerIPEdit = QLineEdit(self)
-        self.wikiServerIPEdit.move(640, 330)
+        self.wikiServerIPEdit.move(640, 283)
         self.wikiServerIPEdit.resize(110, 20)
         self.wikiServerIPEdit.setReadOnly(True)
-        self.wikiServerIPEdit.setText(wiki_local_server_ip_configuration) #.replace('SYMBIOT_SERVER: ', ''))
+        self.wikiServerIPEdit.setText(wiki_local_server_ip_configuration)  # .replace('SYMBIOT_SERVER: ', ''))
         self.wikiServerIPEdit.returnPressed.connect(self.writeWikiServerFunction)
         self.wikiServerIPEdit.setStyleSheet(
             """QLineEdit {background-color: rgb(15, 14, 15);
@@ -1667,22 +1770,22 @@ class App(QMainWindow):
             color: grey;}"""
         )
         # Wiki Server Port Button
-        wikiServerPortButton = QPushButton(self)
-        wikiServerPortButton.move(570, 350)
-        wikiServerPortButton.resize(125, 20)
-        wikiServerPortButton.setText('Wiki Server Port')
-        wikiServerPortButton.clicked.connect(self.wikiServerPortFunction)
-        wikiServerPortButton.setStyleSheet(
+        self.wikiServerPortButton = QPushButton(self)
+        self.wikiServerPortButton.move(570, 298)
+        self.wikiServerPortButton.resize(125, 20)
+        self.wikiServerPortButton.setText('Wiki Server Port')
+        self.wikiServerPortButton.clicked.connect(self.wikiServerPortFunction)
+        self.wikiServerPortButton.setStyleSheet(
             """QPushButton {background-color: rgb(0, 0, 0);
-           color: yellow;
+           color: green;
            border: false;}"""
         )
         # Wiki Server Port Edit
         self.wikiServerPortEdit = QLineEdit(self)
-        self.wikiServerPortEdit.move(695, 350)
+        self.wikiServerPortEdit.move(695, 298)
         self.wikiServerPortEdit.resize(55, 20)
         self.wikiServerPortEdit.setReadOnly(True)
-        self.wikiServerPortEdit.setText(wiki_local_server_port_configuration) #.replace('SYMBIOT_SERVER: ', ''))
+        self.wikiServerPortEdit.setText(wiki_local_server_port_configuration)  # .replace('SYMBIOT_SERVER: ', ''))
         self.wikiServerPortEdit.returnPressed.connect(self.writeWikiServerPortFunction)
         self.wikiServerPortEdit.setStyleSheet(
             """QLineEdit {background-color: rgb(15, 14, 15);
@@ -1693,32 +1796,32 @@ class App(QMainWindow):
         )
 
         # Symbiot Settings
-        symbiotTitle = QLabel(self)
-        symbiotTitle.move(40, 300)
-        symbiotTitle.resize(100, 20)
-        symbiotTitle.setText('Symbiot Settings')
-        symbiotTitle.setStyleSheet(
+        self.symbiotTitle = QLabel(self)
+        self.symbiotTitle.move(74, 263)
+        self.symbiotTitle.resize(100, 20)
+        self.symbiotTitle.setText('Symbiot Settings')
+        self.symbiotTitle.setStyleSheet(
             """QLabel {
            color: yellow;
            border: false;}"""
         )
         # Symbiot Server IP Button
-        symbiotServerIPButton = QPushButton(self)
-        symbiotServerIPButton.move(30, 330)
-        symbiotServerIPButton.resize(80, 20)
-        symbiotServerIPButton.setText('Server IP')
-        symbiotServerIPButton.clicked.connect(self.symbiotServerIPFunction)
-        symbiotServerIPButton.setStyleSheet(
+        self.symbiotServerIPButton = QPushButton(self)
+        self.symbiotServerIPButton.move(74, 283)
+        self.symbiotServerIPButton.resize(80, 20)
+        self.symbiotServerIPButton.setText('Server IP')
+        self.symbiotServerIPButton.clicked.connect(self.symbiotServerIPFunction)
+        self.symbiotServerIPButton.setStyleSheet(
             """QPushButton {background-color: rgb(0, 0, 0);
-           color: yellow;
+           color: green;
            border: false;}"""
         )
         # Symbiot Server IP Edit
         self.symbiotServerIPEdit = QLineEdit(self)
-        self.symbiotServerIPEdit.move(110, 330)
-        self.symbiotServerIPEdit.resize(230, 20)
+        self.symbiotServerIPEdit.move(144, 283)
+        self.symbiotServerIPEdit.resize(120, 20)
         self.symbiotServerIPEdit.setReadOnly(True)
-        self.symbiotServerIPEdit.setText(symbiot_server_ip_configuration) #.replace('SYMBIOT_SERVER: ', ''))
+        self.symbiotServerIPEdit.setText(symbiot_server_ip_configuration)  # .replace('SYMBIOT_SERVER: ', ''))
         self.symbiotServerIPEdit.returnPressed.connect(self.writeSymbiotServerIPFunction)
         self.symbiotServerIPEdit.setStyleSheet(
             """QLineEdit {background-color: rgb(15, 14, 15);
@@ -1728,22 +1831,22 @@ class App(QMainWindow):
             color: grey;}"""
         )
         # Symbiot Server Port Button
-        symbiotServerPortButton = QPushButton(self)
-        symbiotServerPortButton.move(30, 350)
-        symbiotServerPortButton.resize(80, 20)
-        symbiotServerPortButton.setText('Server Port')
-        symbiotServerPortButton.clicked.connect(self.symbiotServerPortFunction)
-        symbiotServerPortButton.setStyleSheet(
+        self.symbiotServerPortButton = QPushButton(self)
+        self.symbiotServerPortButton.move(74, 298)
+        self.symbiotServerPortButton.resize(80, 20)
+        self.symbiotServerPortButton.setText('Server Port')
+        self.symbiotServerPortButton.clicked.connect(self.symbiotServerPortFunction)
+        self.symbiotServerPortButton.setStyleSheet(
             """QPushButton {background-color: rgb(0, 0, 0);
-           color: yellow;
+           color: green;
            border: false;}"""
         )
         # Symbiot Server Port Edit
         self.symbiotServerPortEdit = QLineEdit(self)
-        self.symbiotServerPortEdit.move(110, 350)
-        self.symbiotServerPortEdit.resize(230, 20)
+        self.symbiotServerPortEdit.move(144, 298)
+        self.symbiotServerPortEdit.resize(120, 20)
         self.symbiotServerPortEdit.setReadOnly(True)
-        self.symbiotServerPortEdit.setText(symbiot_server_port_configuration) #.replace('SYMBIOT_SERVER_PORT: ', ''))
+        self.symbiotServerPortEdit.setText(symbiot_server_port_configuration)  # .replace('SYMBIOT_SERVER_PORT: ', ''))
         self.symbiotServerPortEdit.returnPressed.connect(self.writeSymbiotServerPortFunction)
         self.symbiotServerPortEdit.setStyleSheet(
             """QLineEdit {background-color: rgb(15, 14, 15);
@@ -1753,22 +1856,22 @@ class App(QMainWindow):
             color: grey;}"""
         )
         # Symbiot IP Button
-        symbiotIPButton = QPushButton(self)
-        symbiotIPButton.move(30, 370)
-        symbiotIPButton.resize(80, 20)
-        symbiotIPButton.setText('Symbiot IP')
-        symbiotIPButton.clicked.connect(self.symbiotIPFunction)
-        symbiotIPButton.setStyleSheet(
+        self.symbiotIPButton = QPushButton(self)
+        self.symbiotIPButton.move(74, 313)
+        self.symbiotIPButton.resize(80, 20)
+        self.symbiotIPButton.setText('Symbiot IP')
+        self.symbiotIPButton.clicked.connect(self.symbiotIPFunction)
+        self.symbiotIPButton.setStyleSheet(
             """QPushButton {background-color: rgb(0, 0, 0);
-           color: yellow;
+           color: green;
            border: false;}"""
         )
         # Symbiot IP Edit
         self.symbiotIPEdit = QLineEdit(self)
-        self.symbiotIPEdit.move(110, 370)
-        self.symbiotIPEdit.resize(230, 20)
+        self.symbiotIPEdit.move(144, 313)
+        self.symbiotIPEdit.resize(120, 20)
         self.symbiotIPEdit.setReadOnly(True)
-        self.symbiotIPEdit.setText(symbiot_ip_configuration) # .replace('SYMBIOT_IP: ', ''))
+        self.symbiotIPEdit.setText(symbiot_ip_configuration)  # .replace('SYMBIOT_IP: ', ''))
         self.symbiotIPEdit.returnPressed.connect(self.writeSymbiotIPFunction)
         self.symbiotIPEdit.setStyleSheet(
             """QLineEdit {background-color: rgb(15, 14, 15);
@@ -1778,22 +1881,22 @@ class App(QMainWindow):
             color: grey;}"""
         )
         # Symbiot MAC Button
-        symbiotMACButton = QPushButton(self)
-        symbiotMACButton.move(30, 390)
-        symbiotMACButton.resize(80, 20)
-        symbiotMACButton.setText('Symbiot MAC')
-        symbiotMACButton.clicked.connect(self.symbiotMACFunction)
-        symbiotMACButton.setStyleSheet(
+        self.symbiotMACButton = QPushButton(self)
+        self.symbiotMACButton.move(74, 328)
+        self.symbiotMACButton.resize(80, 20)
+        self.symbiotMACButton.setText('Symbiot MAC')
+        self.symbiotMACButton.clicked.connect(self.symbiotMACFunction)
+        self.symbiotMACButton.setStyleSheet(
             """QPushButton {background-color: rgb(0, 0, 0);
-           color: yellow;
+           color: green;
            border: false;}"""
         )
         # Symbiot MAC Edit
         self.symbiotMACEdit = QLineEdit(self)
-        self.symbiotMACEdit.move(110, 390)
-        self.symbiotMACEdit.resize(230, 20)
+        self.symbiotMACEdit.move(144, 328)
+        self.symbiotMACEdit.resize(120, 20)
         self.symbiotMACEdit.setReadOnly(True)
-        self.symbiotMACEdit.setText(symbiot_mac_configuration) # .replace('SYMBIOT_MAC: ', ''))
+        self.symbiotMACEdit.setText(symbiot_mac_configuration)  # .replace('SYMBIOT_MAC: ', ''))
         self.symbiotMACEdit.returnPressed.connect(self.writeSymbiotMACFunction)
         self.symbiotMACEdit.setStyleSheet(
             """QLineEdit {background-color: rgb(15, 14, 15);
@@ -1803,20 +1906,20 @@ class App(QMainWindow):
             color: grey;}"""
         )
 
-        #Index Audio Settings
-        indexAudioButton = QPushButton(self)
-        indexAudioButton.move(30, 215)
-        indexAudioButton.resize(45, 20)
-        indexAudioButton.setText(' Audio')
-        indexAudioButton.clicked.connect(self.indexAudioConfigurationFunction)
-        indexAudioButton.setStyleSheet(
+        # Index Audio Settings
+        self.indexAudioButton = QPushButton(self)
+        self.indexAudioButton.move(74, 168)
+        self.indexAudioButton.resize(45, 20)
+        self.indexAudioButton.setText('Audio')
+        self.indexAudioButton.clicked.connect(self.indexAudioConfigurationFunction)
+        self.indexAudioButton.setStyleSheet(
             """QPushButton {background-color: rgb(0, 0, 0);
-           color: yellow;
+           color: green;
            border: false;}"""
         )
         self.indexAudioEdit = QLineEdit(self)
-        self.indexAudioEdit.move(75, 215)
-        self.indexAudioEdit.resize(230, 20)
+        self.indexAudioEdit.move(119, 168)
+        self.indexAudioEdit.resize(170, 20)
         self.indexAudioEdit.setReadOnly(True)
         self.indexAudioEdit.setText(audio_configuration.replace('DIRAUD: ', ''))
         self.indexAudioEdit.returnPressed.connect(self.writeAudioPathFunction)
@@ -1828,7 +1931,7 @@ class App(QMainWindow):
             color: grey;}"""
         )
         self.indexAudioEnableDisableButton = QPushButton(self)
-        self.indexAudioEnableDisableButton.move(305, 215)
+        self.indexAudioEnableDisableButton.move(289, 168)
         self.indexAudioEnableDisableButton.resize(45, 20)
         self.indexAudioEnableDisableButton.setText(audio_active_config)
         self.indexAudioEnableDisableButton.clicked.connect(configInteractionPermissionFunction)
@@ -1847,19 +1950,19 @@ class App(QMainWindow):
             )
 
         # Video Index Settings
-        indexVideoButton = QPushButton(self)
-        indexVideoButton.move(30, 230)
-        indexVideoButton.resize(45, 20)
-        indexVideoButton.setText(' Video')
-        indexVideoButton.clicked.connect(self.indexVideoConfigurationFunction)
-        indexVideoButton.setStyleSheet(
+        self.indexVideoButton = QPushButton(self)
+        self.indexVideoButton.move(74, 183)
+        self.indexVideoButton.resize(45, 20)
+        self.indexVideoButton.setText('Video')
+        self.indexVideoButton.clicked.connect(self.indexVideoConfigurationFunction)
+        self.indexVideoButton.setStyleSheet(
             """QPushButton {background-color: rgb(0, 0, 0);
-           color: yellow;
+           color: green;
            border: false;}"""
         )
         self.indexVideoEdit = QLineEdit(self)
-        self.indexVideoEdit.move(75, 230)
-        self.indexVideoEdit.resize(230, 20)
+        self.indexVideoEdit.move(119, 183)
+        self.indexVideoEdit.resize(170, 20)
         self.indexVideoEdit.setReadOnly(True)
         self.indexVideoEdit.setText(video_configuration.replace('DIRVID: ', ''))
         self.indexVideoEdit.returnPressed.connect(self.writeVideoPathFunction)
@@ -1871,7 +1974,7 @@ class App(QMainWindow):
             color: grey;}"""
         )
         self.indexVideoEnableDisableButton = QPushButton(self)
-        self.indexVideoEnableDisableButton.move(305, 230)
+        self.indexVideoEnableDisableButton.move(289, 183)
         self.indexVideoEnableDisableButton.resize(45, 20)
         self.indexVideoEnableDisableButton.setText(video_active_config)
         self.indexVideoEnableDisableButton.clicked.connect(configInteractionPermissionFunction)
@@ -1890,19 +1993,19 @@ class App(QMainWindow):
             )
 
         # Images Index Settings
-        indexImagesButton = QPushButton(self)
-        indexImagesButton.move(30, 245)
-        indexImagesButton.resize(45, 20)
-        indexImagesButton.setText(' Images')
-        indexImagesButton.clicked.connect(self.indexImagesConfigurationFunction)
-        indexImagesButton.setStyleSheet(
+        self.indexImagesButton = QPushButton(self)
+        self.indexImagesButton.move(74, 198)
+        self.indexImagesButton.resize(45, 20)
+        self.indexImagesButton.setText('  Images')
+        self.indexImagesButton.clicked.connect(self.indexImagesConfigurationFunction)
+        self.indexImagesButton.setStyleSheet(
             """QPushButton {background-color: rgb(0, 0, 0);
-           color: yellow;
+           color: green;
            border: false;}"""
         )
         self.indexImagesEdit = QLineEdit(self)
-        self.indexImagesEdit.move(75, 245)
-        self.indexImagesEdit.resize(230, 20)
+        self.indexImagesEdit.move(119, 198)
+        self.indexImagesEdit.resize(170, 20)
         self.indexImagesEdit.setReadOnly(True)
         self.indexImagesEdit.setText(image_configuration.replace('DIRIMG: ', ''))
         self.indexImagesEdit.returnPressed.connect(self.writeImagesPathFunction)
@@ -1914,7 +2017,7 @@ class App(QMainWindow):
             color: grey;}"""
         )
         self.indexImageEnableDisableButton = QPushButton(self)
-        self.indexImageEnableDisableButton.move(305, 245)
+        self.indexImageEnableDisableButton.move(289, 198)
         self.indexImageEnableDisableButton.resize(45, 20)
         self.indexImageEnableDisableButton.setText(image_active_config)
         self.indexImageEnableDisableButton.clicked.connect(configInteractionPermissionFunction)
@@ -1933,19 +2036,19 @@ class App(QMainWindow):
             )
 
         # Text Index Settings
-        indexTextButton = QPushButton(self)
-        indexTextButton.move(30, 260)
-        indexTextButton.resize(45, 20)
-        indexTextButton.setText('Text')
-        indexTextButton.clicked.connect(self.indexTextConfigurationFunction)
-        indexTextButton.setStyleSheet(
+        self.indexTextButton = QPushButton(self)
+        self.indexTextButton.move(74, 213)
+        self.indexTextButton.resize(45, 20)
+        self.indexTextButton.setText('Text')
+        self.indexTextButton.clicked.connect(self.indexTextConfigurationFunction)
+        self.indexTextButton.setStyleSheet(
             """QPushButton {background-color: rgb(0, 0, 0);
-           color: yellow;
+           color: green;
            border: false;}"""
         )
         self.indexTextEdit = QLineEdit(self)
-        self.indexTextEdit.move(75, 260)
-        self.indexTextEdit.resize(230, 20)
+        self.indexTextEdit.move(119, 213)
+        self.indexTextEdit.resize(170, 20)
         self.indexTextEdit.setReadOnly(True)
         self.indexTextEdit.setText(text_configuration.replace('DIRTXT: ', ''))
         self.indexTextEdit.returnPressed.connect(self.writeTextPathFunction)
@@ -1957,7 +2060,7 @@ class App(QMainWindow):
             color: grey;}"""
         )
         self.indexTextEnableDisableButton = QPushButton(self)
-        self.indexTextEnableDisableButton.move(305, 260)
+        self.indexTextEnableDisableButton.move(289, 213)
         self.indexTextEnableDisableButton.resize(45, 20)
         self.indexTextEnableDisableButton.setText(text_active_config)
         self.indexTextEnableDisableButton.clicked.connect(configInteractionPermissionFunction)
@@ -1976,18 +2079,18 @@ class App(QMainWindow):
             )
 
         # Drive1 Index Settings
-        drive1Button = QPushButton(self)
-        drive1Button.move(370, 215)
-        drive1Button.resize(45, 20)
-        drive1Button.setText(' 1')
-        drive1Button.clicked.connect(self.indexDrive1ConfigurationFunction)
-        drive1Button.setStyleSheet(
+        self.drive1Button = QPushButton(self)
+        self.drive1Button.move(370, 168)
+        self.drive1Button.resize(45, 20)
+        self.drive1Button.setText(' 1')
+        self.drive1Button.clicked.connect(self.indexDrive1ConfigurationFunction)
+        self.drive1Button.setStyleSheet(
             """QPushButton {background-color: rgb(0, 0, 0);
-           color: yellow;
+           color: green;
            border: false;}"""
         )
         self.drive1TextEdit = QLineEdit(self)
-        self.drive1TextEdit.move(415, 215)
+        self.drive1TextEdit.move(415, 168)
         self.drive1TextEdit.resize(100, 20)
         self.drive1TextEdit.setReadOnly(True)
         self.drive1TextEdit.setText(drive1_configuration.replace('DRIVE1: ', ''))
@@ -2000,7 +2103,7 @@ class App(QMainWindow):
             color: grey;}"""
         )
         self.drive1EnableDisableButton = QPushButton(self)
-        self.drive1EnableDisableButton.move(515, 215)
+        self.drive1EnableDisableButton.move(515, 168)
         self.drive1EnableDisableButton.resize(45, 20)
         self.drive1EnableDisableButton.setText(drive_1_active_config)
         self.drive1EnableDisableButton.clicked.connect(configInteractionPermissionFunction)
@@ -2019,18 +2122,18 @@ class App(QMainWindow):
             )
 
         # Drive2 Index Settings
-        drive2Button = QPushButton(self)
-        drive2Button.move(370, 230)
-        drive2Button.resize(45, 20)
-        drive2Button.setText(' 2')
-        drive2Button.clicked.connect(self.indexDrive2ConfigurationFunction)
-        drive2Button.setStyleSheet(
+        self.drive2Button = QPushButton(self)
+        self.drive2Button.move(370, 183)
+        self.drive2Button.resize(45, 20)
+        self.drive2Button.setText(' 2')
+        self. drive2Button.clicked.connect(self.indexDrive2ConfigurationFunction)
+        self.drive2Button.setStyleSheet(
             """QPushButton {background-color: rgb(0, 0, 0);
-           color: yellow;
+           color: green;
            border: false;}"""
         )
         self.drive2TextEdit = QLineEdit(self)
-        self.drive2TextEdit.move(415, 230)
+        self.drive2TextEdit.move(415, 183)
         self.drive2TextEdit.resize(100, 20)
         self.drive2TextEdit.setReadOnly(True)
         self.drive2TextEdit.setText(drive2_configuration.replace('DRIVE2: ', ''))
@@ -2043,7 +2146,7 @@ class App(QMainWindow):
             color: grey;}"""
         )
         self.drive2EnableDisableButton = QPushButton(self)
-        self.drive2EnableDisableButton.move(515, 230)
+        self.drive2EnableDisableButton.move(515, 183)
         self.drive2EnableDisableButton.resize(45, 20)
         self.drive2EnableDisableButton.setText(drive_2_active_config)
         self.drive2EnableDisableButton.clicked.connect(configInteractionPermissionFunction)
@@ -2062,18 +2165,18 @@ class App(QMainWindow):
             )
 
         # Drive3 Index Settings
-        drive3Button = QPushButton(self)
-        drive3Button.move(370, 245)
-        drive3Button.resize(45, 20)
-        drive3Button.setText(' 3')
-        drive3Button.clicked.connect(self.indexDrive3ConfigurationFunction)
-        drive3Button.setStyleSheet(
+        self.drive3Button = QPushButton(self)
+        self.drive3Button.move(370, 198)
+        self.drive3Button.resize(45, 20)
+        self.drive3Button.setText(' 3')
+        self.drive3Button.clicked.connect(self.indexDrive3ConfigurationFunction)
+        self.drive3Button.setStyleSheet(
             """QPushButton {background-color: rgb(0, 0, 0);
-           color: yellow;
+           color: green;
            border: false;}"""
         )
         self.drive3TextEdit = QLineEdit(self)
-        self.drive3TextEdit.move(415, 245)
+        self.drive3TextEdit.move(415, 198)
         self.drive3TextEdit.resize(100, 20)
         self.drive3TextEdit.setReadOnly(True)
         self.drive3TextEdit.setText(drive3_configuration.replace('DRIVE3: ', ''))
@@ -2086,7 +2189,7 @@ class App(QMainWindow):
             color: grey;}"""
         )
         self.drive3EnableDisableButton = QPushButton(self)
-        self.drive3EnableDisableButton.move(515, 245)
+        self.drive3EnableDisableButton.move(515, 198)
         self.drive3EnableDisableButton.resize(45, 20)
         self.drive3EnableDisableButton.setText(drive_3_active_config)
         self.drive3EnableDisableButton.clicked.connect(configInteractionPermissionFunction)
@@ -2105,18 +2208,18 @@ class App(QMainWindow):
             )
 
         # Drive4 Indexing Settings
-        drive4Button = QPushButton(self)
-        drive4Button.move(370, 260)
-        drive4Button.resize(45, 20)
-        drive4Button.setText(' 4')
-        drive4Button.clicked.connect(self.indexDrive4ConfigurationFunction)
-        drive4Button.setStyleSheet(
+        self.drive4Button = QPushButton(self)
+        self.drive4Button.move(370, 213)
+        self.drive4Button.resize(45, 20)
+        self.drive4Button.setText(' 4')
+        self.drive4Button.clicked.connect(self.indexDrive4ConfigurationFunction)
+        self.drive4Button.setStyleSheet(
             """QPushButton {background-color: rgb(0, 0, 0);
-           color: yellow;
+           color: green;
            border: false;}"""
         )
         self.drive4TextEdit = QLineEdit(self)
-        self.drive4TextEdit.move(415, 260)
+        self.drive4TextEdit.move(415, 213)
         self.drive4TextEdit.resize(100, 20)
         self.drive4TextEdit.setReadOnly(True)
         self.drive4TextEdit.setText(drive4_configuration.replace('DRIVE4: ', ''))
@@ -2129,7 +2232,7 @@ class App(QMainWindow):
             color: grey;}"""
         )
         self.drive4EnableDisableButton = QPushButton(self)
-        self.drive4EnableDisableButton.move(515, 260)
+        self.drive4EnableDisableButton.move(515, 213)
         self.drive4EnableDisableButton.resize(45, 20)
         self.drive4EnableDisableButton.setText(drive_4_active_config)
         self.drive4EnableDisableButton.clicked.connect(configInteractionPermissionFunction)
@@ -2147,18 +2250,18 @@ class App(QMainWindow):
                border: false;}"""
             )
         # Drive5 Index Settings
-        drive5Button = QPushButton(self)
-        drive5Button.move(565, 215)
-        drive5Button.resize(45, 20)
-        drive5Button.setText(' 5')
-        drive5Button.clicked.connect(self.indexDrive5ConfigurationFunction)
-        drive5Button.setStyleSheet(
+        self.drive5Button = QPushButton(self)
+        self.drive5Button.move(565, 168)
+        self.drive5Button.resize(45, 20)
+        self.drive5Button.setText(' 5')
+        self.drive5Button.clicked.connect(self.indexDrive5ConfigurationFunction)
+        self.drive5Button.setStyleSheet(
             """QPushButton {background-color: rgb(0, 0, 0);
-           color: yellow;
+           color: green;
            border: false;}"""
         )
         self.drive5TextEdit = QLineEdit(self)
-        self.drive5TextEdit.move(610, 215)
+        self.drive5TextEdit.move(610, 168)
         self.drive5TextEdit.resize(100, 20)
         self.drive5TextEdit.setReadOnly(True)
         self.drive5TextEdit.setText(drive5_configuration.replace('DRIVE5: ', ''))
@@ -2171,7 +2274,7 @@ class App(QMainWindow):
             color: grey;}"""
         )
         self.drive5EnableDisableButton = QPushButton(self)
-        self.drive5EnableDisableButton.move(710, 215)
+        self.drive5EnableDisableButton.move(710, 168)
         self.drive5EnableDisableButton.resize(45, 20)
         self.drive5EnableDisableButton.setText(drive_5_active_config)
         self.drive5EnableDisableButton.clicked.connect(configInteractionPermissionFunction)
@@ -2190,18 +2293,18 @@ class App(QMainWindow):
             )
 
         # Drive6 Index Settings
-        drive6Button = QPushButton(self)
-        drive6Button.move(565, 230)
-        drive6Button.resize(45, 20)
-        drive6Button.setText(' 6')
-        drive6Button.clicked.connect(self.indexDrive6ConfigurationFunction)
-        drive6Button.setStyleSheet(
+        self.drive6Button = QPushButton(self)
+        self.drive6Button.move(565, 183)
+        self.drive6Button.resize(45, 20)
+        self.drive6Button.setText(' 6')
+        self.drive6Button.clicked.connect(self.indexDrive6ConfigurationFunction)
+        self.drive6Button.setStyleSheet(
             """QPushButton {background-color: rgb(0, 0, 0);
-           color: yellow;
+           color: green;
            border: false;}"""
         )
         self.drive6TextEdit = QLineEdit(self)
-        self.drive6TextEdit.move(610, 230)
+        self.drive6TextEdit.move(610, 183)
         self.drive6TextEdit.resize(100, 20)
         self.drive6TextEdit.setReadOnly(True)
         self.drive6TextEdit.setText(drive6_configuration.replace('DRIVE6: ', ''))
@@ -2214,7 +2317,7 @@ class App(QMainWindow):
             color: grey;}"""
         )
         self.drive6EnableDisableButton = QPushButton(self)
-        self.drive6EnableDisableButton.move(710, 230)
+        self.drive6EnableDisableButton.move(710, 183)
         self.drive6EnableDisableButton.resize(45, 20)
         self.drive6EnableDisableButton.setText(drive_6_active_config)
         self.drive6EnableDisableButton.clicked.connect(configInteractionPermissionFunction)
@@ -2233,18 +2336,18 @@ class App(QMainWindow):
             )
 
         # Drive7 Index Settings
-        drive7Button = QPushButton(self)
-        drive7Button.move(565, 245)
-        drive7Button.resize(45, 20)
-        drive7Button.setText(' 7')
-        drive7Button.clicked.connect(self.indexDrive7ConfigurationFunction)
-        drive7Button.setStyleSheet(
+        self.drive7Button = QPushButton(self)
+        self.drive7Button.move(565, 198)
+        self.drive7Button.resize(45, 20)
+        self.drive7Button.setText(' 7')
+        self.drive7Button.clicked.connect(self.indexDrive7ConfigurationFunction)
+        self.drive7Button.setStyleSheet(
             """QPushButton {background-color: rgb(0, 0, 0);
-           color: yellow;
+           color: green;
            border: false;}"""
         )
         self.drive7TextEdit = QLineEdit(self)
-        self.drive7TextEdit.move(610, 245)
+        self.drive7TextEdit.move(610, 198)
         self.drive7TextEdit.resize(100, 20)
         self.drive7TextEdit.setReadOnly(True)
         self.drive7TextEdit.setText(drive7_configuration.replace('DRIVE7: ', ''))
@@ -2257,7 +2360,7 @@ class App(QMainWindow):
             color: grey;}"""
         )
         self.drive7EnableDisableButton = QPushButton(self)
-        self.drive7EnableDisableButton.move(710, 245)
+        self.drive7EnableDisableButton.move(710, 198)
         self.drive7EnableDisableButton.resize(45, 20)
         self.drive7EnableDisableButton.setText(drive_7_active_config)
         self.drive7EnableDisableButton.clicked.connect(configInteractionPermissionFunction)
@@ -2276,18 +2379,18 @@ class App(QMainWindow):
             )
 
         # Drive8 Indexing Settings
-        drive8Button = QPushButton(self)
-        drive8Button.move(565, 260)
-        drive8Button.resize(45, 20)
-        drive8Button.setText(' 8')
-        drive8Button.clicked.connect(self.indexDrive8ConfigurationFunction)
-        drive8Button.setStyleSheet(
+        self.drive8Button = QPushButton(self)
+        self.drive8Button.move(565, 213)
+        self.drive8Button.resize(45, 20)
+        self.drive8Button.setText(' 8')
+        self.drive8Button.clicked.connect(self.indexDrive8ConfigurationFunction)
+        self.drive8Button.setStyleSheet(
             """QPushButton {background-color: rgb(0, 0, 0);
-           color: yellow;
+           color: green;
            border: false;}"""
         )
         self.drive8TextEdit = QLineEdit(self)
-        self.drive8TextEdit.move(610, 260)
+        self.drive8TextEdit.move(610, 213)
         self.drive8TextEdit.resize(100, 20)
         self.drive8TextEdit.setReadOnly(True)
         self.drive8TextEdit.setText(drive8_configuration.replace('DRIVE8: ', ''))
@@ -2300,7 +2403,7 @@ class App(QMainWindow):
             color: grey;}"""
         )
         self.drive8EnableDisableButton = QPushButton(self)
-        self.drive8EnableDisableButton.move(710, 260)
+        self.drive8EnableDisableButton.move(710, 213)
         self.drive8EnableDisableButton.resize(45, 20)
         self.drive8EnableDisableButton.setText(drive_8_active_config)
         self.drive8EnableDisableButton.clicked.connect(configInteractionPermissionFunction)
@@ -2318,33 +2421,97 @@ class App(QMainWindow):
                border: false;}"""
             )
 
-        #Threads
-        symbiotServerThread = symbiotServerClass(speechRecognitionThread, symbiotButton, speechRecognitionOffFunction)
-        openDirectoryThread = openDirectoryClass(textBoxVerbose1, textBoxVerbose2)
+        # self.settingsTitle.hide()
+        self.indexTitle.hide()
+        self.indexTitle2.hide()
+        self.wikiSettingsLabel.hide()
+        self.wikiShowBrowserLabel.hide()
+        self.wikiShowBrowserButton.hide()
+        self.dictateWikiLabel.hide()
+        self.dictateWikiButton.hide()
+        self.useLocalWikiLabel.hide()
+        self.useLocalWikiButton.hide()
+        self.wikiServerIPButton.hide()
+        self.wikiServerIPEdit.hide()
+        self.wikiServerPortButton.hide()
+        self.wikiServerPortEdit.hide()
+        self.symbiotTitle.hide()
+        self.symbiotServerIPButton.hide()
+        self.symbiotServerIPEdit.hide()
+        self.symbiotServerIPEdit.hide()
+        self.symbiotServerPortButton.hide()
+        self.symbiotServerPortEdit.hide()
+        self.symbiotIPButton.hide()
+        self.symbiotIPEdit.hide()
+        self.symbiotMACButton.hide()
+        self.symbiotMACEdit.hide()
+        self.indexAudioButton.hide()
+        self.indexAudioEdit.hide()
+        self.indexAudioEnableDisableButton.hide()
+        self.indexVideoButton.hide()
+        self.indexVideoEdit.hide()
+        self.indexVideoEnableDisableButton.hide()
+        self.indexImagesButton.hide()
+        self.indexImagesEdit.hide()
+        self.indexImageEnableDisableButton.hide()
+        self.indexTextButton.hide()
+        self.indexTextEdit.hide()
+        self.indexTextEnableDisableButton.hide()
+        self.drive1Button.hide()
+        self.drive1TextEdit.hide()
+        self.drive1EnableDisableButton.hide()
+        self.drive2Button.hide()
+        self.drive2TextEdit.hide()
+        self.drive2EnableDisableButton.hide()
+        self.drive3Button.hide()
+        self.drive3TextEdit.hide()
+        self.drive3EnableDisableButton.hide()
+        self.drive4Button.hide()
+        self.drive4TextEdit.hide()
+        self.drive4EnableDisableButton.hide()
+        self.drive5Button.hide()
+        self.drive5TextEdit.hide()
+        self.drive5EnableDisableButton.hide()
+        self.drive6Button.hide()
+        self.drive6TextEdit.hide()
+        self.drive6EnableDisableButton.hide()
+        self.drive7Button.hide()
+        self.drive7TextEdit.hide()
+        self.drive7EnableDisableButton.hide()
+        self.drive8Button.hide()
+        self.drive8TextEdit.hide()
+        self.drive8EnableDisableButton.hide()
+
+
+        # Threads
+        symbiotServerThread = symbiotServerClass(speechRecognitionThread, symbiotButton, speechRecognitionOffFunction,
+                                                 speechRecognitionOnFunction)
+        openDirectoryThread = openDirectoryClass(self.textBoxVerbose1, self.textBoxVerbose2)
         findOpenImageThread = findOpenImageClass()
         findOpenTextThread = findOpenTextClass()
         findOpenVideoThread = findOpenVideoClass()
         findOpenProgramThread = findOpenProgramClass()
-        guiControllerThread = guiControllerClass(srInfo,
-                                            textBoxValue,
-                                            textBoxVerbose1,
-                                            textBoxVerbose2)
-        textBoxVerbose2Thread = textBoxVerbose2Class(textBoxVerbose2)
+        guiControllerThread = guiControllerClass(self.srInfo,
+                                                 self.textBoxValue,
+                                                 self.textBoxVerbose1,
+                                                 self.textBoxVerbose2)
+        textBoxVerbose2Thread = textBoxVerbose2Class(self.textBoxVerbose2)
         findOpenAudioThread = findOpenAudioClass(target_index,
                                                  multiple_matches,
                                                  target_match,
-                                                 textBoxVerbose1)
-        commandSearchThread = commandSearchClass(textBoxVerbose1,
-                                            textBoxVerbose2,
-                                            textBoxVerbose2Thread)
-        speechRecognitionThread = speechRecognitionClass(srIndicator,
-                                           textBoxValue,
-                                           textBoxVerbose1,
-                                           textBoxVerbose2,
-                                           textBoxVerbose2Thread,
-                                           srInfo,
-                                           guiControllerThread,
-                                           commandSearchThread)
+                                                 self.textBoxVerbose1)
+        commandSearchThread = commandSearchClass(self.textBoxVerbose1,
+                                                 self.textBoxVerbose2,
+                                                 textBoxVerbose2Thread)
+        speechRecognitionThread = speechRecognitionClass(self.srIndicator,
+                                                         self.textBoxValue,
+                                                         self.textBoxVerbose1,
+                                                         self.textBoxVerbose2,
+                                                         textBoxVerbose2Thread,
+                                                         self.srInfo,
+                                                         guiControllerThread,
+                                                         commandSearchThread,
+                                                         self.srOnButton)
         configInteractionPermissionThread = configInteractionPermissionClass(self.indexAudioEnableDisableButton,
                                                                              self.indexVideoEnableDisableButton,
                                                                              self.indexImageEnableDisableButton,
@@ -2353,10 +2520,10 @@ class App(QMainWindow):
                                                                              self.indexVideoEdit,
                                                                              self.indexImagesEdit,
                                                                              self.indexTextEdit,
-                                                                             indexAudioButton,
-                                                                             indexVideoButton,
-                                                                             indexImagesButton,
-                                                                             indexTextButton,
+                                                                             self.indexAudioButton,
+                                                                             self.indexVideoButton,
+                                                                             self.indexImagesButton,
+                                                                             self.indexTextButton,
                                                                              self.drive1EnableDisableButton,
                                                                              self.drive2EnableDisableButton,
                                                                              self.drive3EnableDisableButton,
@@ -2365,13 +2532,12 @@ class App(QMainWindow):
                                                                              self.drive2TextEdit,
                                                                              self.drive3TextEdit,
                                                                              self.drive4TextEdit,
-                                                                             drive1Button,
-                                                                             drive2Button,
-                                                                             drive3Button,
-                                                                             drive4Button)
-
-
+                                                                             self.drive1Button,
+                                                                             self.drive2Button,
+                                                                             self.drive3Button,
+                                                                             self.drive4Button)
         self.show()
+
 
     def audioIndexEnableDisableFunction(self):
         global audio_active_config_Bool
@@ -2628,7 +2794,7 @@ class App(QMainWindow):
                     """QPushButton {background-color: rgb(0, 0, 0);
                    color: red;
                    border: false;}"""
-            )
+                )
 
     def drive1EnableDisableFunction(self):
         global drive_1_active_config_Bool
@@ -3142,20 +3308,174 @@ class App(QMainWindow):
                    border: false;}"""
                 )
 
-    def incrementalResizeFunction(self):
+    def showHideSettingsFunction(self):
         global showHideValue
+        global show_hide_settings
+        # global drawRectangles
 
-        if incrementalResize == 0:
-            incrementalResize = 1
-            print('resizing main window: 0.0.780.185')
-            self.setFixedSize(780, 185)
-            self.setGeometry(0, 0, 780, 185)
+        if showHideValue == 0:
+            showHideValue = 1
+            print('-- opening menu')
 
-        elif incrementalResize == 1:
-            incrementalResize = 0
-            print('resizing main window: 0.0.780.310')
-            self.setFixedSize(780, 445) # old dim. 780, 310
-            self.setGeometry(0, 0, 780, 445) # old dim. 780, 310
+            show_hide_settings.setIcon(QIcon("./Resources/image/setting_menu_icon.png"))
+            show_hide_settings.setStyleSheet(
+                """QPushButton{background-color: rgb(0, 0, 0);
+               border:1px solid rgb(0, 255, 0);}"""
+            )
+
+            # self.srInfo.hide()
+            # self.textBoxValue.hide()
+            # self.textBoxVerbose1.hide()
+            # self.textBoxVerbose2.hide()
+            # self.srOnButton.hide()
+            self.srIndicator.hide()
+
+            self.setGeometry(self.minimal_extra_left, self.minimal_extra_top, self.minimal_extra_width, self.minimal_extra_height)
+            self.setFixedSize(self.minimal_extra_width, self.minimal_extra_height)
+
+
+            # self.settingsTitle.show()
+            # self.settings_menu_title.show()
+            self.indexTitle.show()
+            self.indexTitle2.show()
+            self.wikiSettingsLabel.show()
+            self.wikiShowBrowserLabel.show()
+            self.wikiShowBrowserButton.show()
+            self.dictateWikiLabel.show()
+            self.dictateWikiButton.show()
+            self.useLocalWikiLabel.show()
+            self.useLocalWikiButton.show()
+            self.wikiServerIPButton.show()
+            self.wikiServerIPEdit.show()
+            self.wikiServerPortButton.show()
+            self.wikiServerPortEdit.show()
+            self.symbiotTitle.show()
+            self.symbiotServerIPButton.show()
+            self.symbiotServerIPEdit.show()
+            self.symbiotServerIPEdit.show()
+            self.symbiotServerPortButton.show()
+            self.symbiotServerPortEdit.show()
+            self.symbiotIPButton.show()
+            self.symbiotIPEdit.show()
+            self.symbiotMACButton.show()
+            self.symbiotMACEdit.show()
+            self.indexAudioButton.show()
+            self.indexAudioEdit.show()
+            self.indexAudioEnableDisableButton.show()
+            self.indexVideoButton.show()
+            self.indexVideoEdit.show()
+            self.indexVideoEnableDisableButton.show()
+            self.indexImagesButton.show()
+            self.indexImagesEdit.show()
+            self.indexImageEnableDisableButton.show()
+            self.indexTextButton.show()
+            self.indexTextEdit.show()
+            self.indexTextEnableDisableButton.show()
+            self.drive1Button.show()
+            self.drive1TextEdit.show()
+            self.drive1EnableDisableButton.show()
+            self.drive2Button.show()
+            self.drive2TextEdit.show()
+            self.drive2EnableDisableButton.show()
+            self.drive3Button.show()
+            self.drive3TextEdit.show()
+            self.drive3EnableDisableButton.show()
+            self.drive4Button.show()
+            self.drive4TextEdit.show()
+            self.drive4EnableDisableButton.show()
+            self.drive5Button.show()
+            self.drive5TextEdit.show()
+            self.drive5EnableDisableButton.show()
+            self.drive6Button.show()
+            self.drive6TextEdit.show()
+            self.drive6EnableDisableButton.show()
+            self.drive7Button.show()
+            self.drive7TextEdit.show()
+            self.drive7EnableDisableButton.show()
+            self.drive8Button.show()
+            self.drive8TextEdit.show()
+            self.drive8EnableDisableButton.show()
+
+        elif showHideValue == 1:
+            showHideValue = 0
+            print('-- closing menu')
+
+            show_hide_settings.setIcon(QIcon("./Resources/image/setting_menu_icon.png"))
+            show_hide_settings.setStyleSheet(
+                """QPushButton{background-color: rgb(0, 0, 0);
+               border:1px solid rgb(0, 0, 255);}"""
+            )
+
+            self.srInfo.show()
+            self.textBoxValue.show()
+            self.textBoxVerbose1.show()
+            self.textBoxVerbose2.show()
+            self.srOnButton.show()
+            self.srIndicator.hide()
+
+            self.setGeometry(self.minimal_left, self.minimal_top, self.minimal_width, self.minimal_height)
+            self.setFixedSize(self.minimal_width, self.minimal_height)
+
+            self.settings_menu_title.hide()
+            self.indexTitle.hide()
+            self.indexTitle2.hide()
+            self.wikiSettingsLabel.hide()
+            self.wikiShowBrowserLabel.hide()
+            self.wikiShowBrowserButton.hide()
+            self.dictateWikiLabel.hide()
+            self.dictateWikiButton.hide()
+            self.useLocalWikiLabel.hide()
+            self.useLocalWikiButton.hide()
+            self.wikiServerIPButton.hide()
+            self.wikiServerIPEdit.hide()
+            self.wikiServerPortButton.hide()
+            self.wikiServerPortEdit.hide()
+            self.symbiotTitle.hide()
+            self.symbiotServerIPButton.hide()
+            self.symbiotServerIPEdit.hide()
+            self.symbiotServerIPEdit.hide()
+            self.symbiotServerPortButton.hide()
+            self.symbiotServerPortEdit.hide()
+            self.symbiotIPButton.hide()
+            self.symbiotIPEdit.hide()
+            self.symbiotMACButton.hide()
+            self.symbiotMACEdit.hide()
+            self.indexAudioButton.hide()
+            self.indexAudioEdit.hide()
+            self.indexAudioEnableDisableButton.hide()
+            self.indexVideoButton.hide()
+            self.indexVideoEdit.hide()
+            self.indexVideoEnableDisableButton.hide()
+            self.indexImagesButton.hide()
+            self.indexImagesEdit.hide()
+            self.indexImageEnableDisableButton.hide()
+            self.indexTextButton.hide()
+            self.indexTextEdit.hide()
+            self.indexTextEnableDisableButton.hide()
+            self.drive1Button.hide()
+            self.drive1TextEdit.hide()
+            self.drive1EnableDisableButton.hide()
+            self.drive2Button.hide()
+            self.drive2TextEdit.hide()
+            self.drive2EnableDisableButton.hide()
+            self.drive3Button.hide()
+            self.drive3TextEdit.hide()
+            self.drive3EnableDisableButton.hide()
+            self.drive4Button.hide()
+            self.drive4TextEdit.hide()
+            self.drive4EnableDisableButton.hide()
+            self.drive5Button.hide()
+            self.drive5TextEdit.hide()
+            self.drive5EnableDisableButton.hide()
+            self.drive6Button.hide()
+            self.drive6TextEdit.hide()
+            self.drive6EnableDisableButton.hide()
+            self.drive7Button.hide()
+            self.drive7TextEdit.hide()
+            self.drive7EnableDisableButton.hide()
+            self.drive8Button.hide()
+            self.drive8TextEdit.hide()
+            self.drive8EnableDisableButton.hide()
 
     # wiki
     def useLocalWikiFunction(self):
@@ -3209,7 +3529,6 @@ class App(QMainWindow):
         # = True
         allow_wiki_local_server_configuration = path_text
 
-
     def dictateWikiFunction(self):
         global wiki_dictate_Bool
         global wiki_dictate_configuration
@@ -3261,7 +3580,6 @@ class App(QMainWindow):
         # = True
         wiki_dictate_configuration = path_text
 
-
     def wikiShowBrowserFunction(self):
         global wiki_show_browser_Bool
         global wiki_show_browser_configuration
@@ -3298,16 +3616,16 @@ class App(QMainWindow):
         i = 0
         for line_lists in line_list:
             if line_list[i].startswith('WIKI_TRANSCRIPT_SHOW_BROWSER: '):
-                print('Replacing list item:',line_list[i], 'with',path_text)
-                line_list[i] = str('WIKI_TRANSCRIPT_SHOW_BROWSER: '+path_text+'\n')
-            i+=1
+                print('Replacing list item:', line_list[i], 'with', path_text)
+                line_list[i] = str('WIKI_TRANSCRIPT_SHOW_BROWSER: ' + path_text + '\n')
+            i += 1
         fo.close()
         i = 0
         with codecs.open('config.conf', 'w', encoding="utf-8") as fo:
             for line_lists in line_list:
                 fo.writelines(line_list[i])
                 # print('writing:', line_list[i])
-                i+=1
+                i += 1
         fo.close()
         print('updated: configuration')
         # = True
@@ -3337,29 +3655,30 @@ class App(QMainWindow):
                 selection-background-color: black;
                 color: grey;}"""
             )
-            self.symbiotServerIPEdit.setText(symbiot_server_ip_configuration) # .replace('DIRAUD: ', ''))
+            self.symbiotServerIPEdit.setText(symbiot_server_ip_configuration)  # .replace('DIRAUD: ', ''))
             self.symbiotServerIPEditable = True
+
     def writeSymbiotServerIPFunction(self):
         global symbiot_server_ip_configuration
         line_list = []
         path_text = self.symbiotServerIPEdit.text()
-        print('IP Entered:',path_text)
+        print('IP Entered:', path_text)
         with codecs.open('config.conf', 'r', encoding="utf-8") as fo:
             for line in fo:
                 line_list.append(line)
         i = 0
         for line_lists in line_list:
             if line_list[i].startswith('SYMBIOT_SERVER: '):
-                print('Replacing list item:',line_list[i], 'with',path_text)
-                line_list[i] = str('SYMBIOT_SERVER: '+path_text+'\n')
-            i+=1
+                print('Replacing list item:', line_list[i], 'with', path_text)
+                line_list[i] = str('SYMBIOT_SERVER: ' + path_text + '\n')
+            i += 1
         fo.close()
         i = 0
         with codecs.open('config.conf', 'w', encoding="utf-8") as fo:
             for line_lists in line_list:
                 fo.writelines(line_list[i])
                 # print('writing:', line_list[i])
-                i+=1
+                i += 1
         fo.close()
         print('updated: symbiot server ip configuration')
         # = True
@@ -3390,29 +3709,30 @@ class App(QMainWindow):
                 selection-background-color: black;
                 color: grey;}"""
             )
-            self.symbiotServerPortEdit.setText(symbiot_server_port_configuration) # .replace('DIRAUD: ', ''))
+            self.symbiotServerPortEdit.setText(symbiot_server_port_configuration)  # .replace('DIRAUD: ', ''))
             self.symbiotServerPortEditable = True
+
     def writeSymbiotServerPortFunction(self):
         global symbiot_server_port_configuration
         line_list = []
         path_text = self.symbiotServerPortEdit.text()
-        print('Port Entered:',path_text)
+        print('Port Entered:', path_text)
         with codecs.open('config.conf', 'r', encoding="utf-8") as fo:
             for line in fo:
                 line_list.append(line)
         i = 0
         for line_lists in line_list:
             if line_list[i].startswith('SYMBIOT_SERVER_PORT: '):
-                print('Replacing list item:',line_list[i], 'with',path_text)
-                line_list[i] = str('SYMBIOT_SERVER_PORT: '+path_text+'\n')
-            i+=1
+                print('Replacing list item:', line_list[i], 'with', path_text)
+                line_list[i] = str('SYMBIOT_SERVER_PORT: ' + path_text + '\n')
+            i += 1
         fo.close()
         i = 0
         with codecs.open('config.conf', 'w', encoding="utf-8") as fo:
             for line_lists in line_list:
                 fo.writelines(line_list[i])
                 # print('writing:', line_list[i])
-                i+=1
+                i += 1
         fo.close()
         print('updated: symbiot server port configuration')
         # = True
@@ -3441,29 +3761,30 @@ class App(QMainWindow):
                 selection-background-color: black;
                 color: grey;}"""
             )
-            self.wikiServerIPEdit.setText(wiki_local_server_ip_configuration) # .replace('DIRAUD: ', ''))
+            self.wikiServerIPEdit.setText(wiki_local_server_ip_configuration)  # .replace('DIRAUD: ', ''))
             self.wikiServerIPEditable = True
+
     def writeWikiServerFunction(self):
         global wiki_local_server_ip_configuration
         line_list = []
         path_text = self.wikiServerIPEdit.text()
-        print('wiki ip entered:',path_text)
+        print('wiki ip entered:', path_text)
         with codecs.open('config.conf', 'r', encoding="utf-8") as fo:
             for line in fo:
                 line_list.append(line)
         i = 0
         for line_lists in line_list:
             if line_list[i].startswith('WIKI_LOCAL_SERVER: '):
-                print('Replacing list item:',line_list[i], 'with',path_text)
-                line_list[i] = str('WIKI_LOCAL_SERVER: '+path_text+'\n')
-            i+=1
+                print('Replacing list item:', line_list[i], 'with', path_text)
+                line_list[i] = str('WIKI_LOCAL_SERVER: ' + path_text + '\n')
+            i += 1
         fo.close()
         i = 0
         with codecs.open('config.conf', 'w', encoding="utf-8") as fo:
             for line_lists in line_list:
                 fo.writelines(line_list[i])
                 # print('writing:', line_list[i])
-                i+=1
+                i += 1
         fo.close()
         print('updated: wiki server ip configuration')
         # = True
@@ -3493,29 +3814,30 @@ class App(QMainWindow):
                 selection-background-color: black;
                 color: grey;}"""
             )
-            self.wikiServerPortEdit.setText(wiki_local_server_port_configuration) # .replace('DIRAUD: ', ''))
+            self.wikiServerPortEdit.setText(wiki_local_server_port_configuration)  # .replace('DIRAUD: ', ''))
             self.wikiServerPortEditable = True
+
     def writeWikiServerPortFunction(self):
         global wiki_local_server_port_configuration
         line_list = []
         path_text = self.wikiServerPortEdit.text()
-        print('wiki server port entered:',path_text)
+        print('wiki server port entered:', path_text)
         with codecs.open('config.conf', 'r', encoding="utf-8") as fo:
             for line in fo:
                 line_list.append(line)
         i = 0
         for line_lists in line_list:
             if line_list[i].startswith('WIKI_LOCAL_SERVER_PORT: '):
-                print('Replacing list item:',line_list[i], 'with',path_text)
-                line_list[i] = str('WIKI_LOCAL_SERVER_PORT: '+path_text+'\n')
-            i+=1
+                print('Replacing list item:', line_list[i], 'with', path_text)
+                line_list[i] = str('WIKI_LOCAL_SERVER_PORT: ' + path_text + '\n')
+            i += 1
         fo.close()
         i = 0
         with codecs.open('config.conf', 'w', encoding="utf-8") as fo:
             for line_lists in line_list:
                 fo.writelines(line_list[i])
                 # print('writing:', line_list[i])
-                i+=1
+                i += 1
         fo.close()
         print('updated: wiki server port configuration')
         # = True
@@ -3546,29 +3868,30 @@ class App(QMainWindow):
                 selection-background-color: black;
                 color: grey;}"""
             )
-            self.symbiotIPEdit.setText(symbiot_ip_configuration) # .replace('DIRAUD: ', ''))
+            self.symbiotIPEdit.setText(symbiot_ip_configuration)  # .replace('DIRAUD: ', ''))
             self.symbiotIPEditable = True
+
     def writeSymbiotIPFunction(self):
         global symbiot_ip_configuration
         line_list = []
         path_text = self.symbiotIPEdit.text()
-        print('symbiot ip entered:',path_text)
+        print('symbiot ip entered:', path_text)
         with codecs.open('config.conf', 'r', encoding="utf-8") as fo:
             for line in fo:
                 line_list.append(line)
         i = 0
         for line_lists in line_list:
             if line_list[i].startswith('SYMBIOT_IP: '):
-                print('Replacing list item:',line_list[i], 'with',path_text)
-                line_list[i] = str('SYMBIOT_IP: '+path_text+'\n')
-            i+=1
+                print('Replacing list item:', line_list[i], 'with', path_text)
+                line_list[i] = str('SYMBIOT_IP: ' + path_text + '\n')
+            i += 1
         fo.close()
         i = 0
         with codecs.open('config.conf', 'w', encoding="utf-8") as fo:
             for line_lists in line_list:
                 fo.writelines(line_list[i])
                 # print('writing:', line_list[i])
-                i+=1
+                i += 1
         fo.close()
         print('updated: symbiot ip configuration')
         # = True
@@ -3599,36 +3922,35 @@ class App(QMainWindow):
                 selection-background-color: black;
                 color: grey;}"""
             )
-            self.symbiotMACEdit.setText(symbiot_mac_configuration) # .replace('DIRAUD: ', ''))
+            self.symbiotMACEdit.setText(symbiot_mac_configuration)  # .replace('DIRAUD: ', ''))
             self.symbiotMACEditable = True
+
     def writeSymbiotMACFunction(self):
         global symbiot_mac_configuration
         line_list = []
         path_text = self.symbiotMACEdit.text()
-        print('symbiot mac entered:',path_text)
+        print('symbiot mac entered:', path_text)
         with codecs.open('config.conf', 'r', encoding="utf-8") as fo:
             for line in fo:
                 line_list.append(line)
         i = 0
         for line_lists in line_list:
             if line_list[i].startswith('SYMBIOT_MAC: '):
-                print('Replacing list item:',line_list[i], 'with',path_text)
-                line_list[i] = str('SYMBIOT_MAC: '+path_text+'\n')
-            i+=1
+                print('Replacing list item:', line_list[i], 'with', path_text)
+                line_list[i] = str('SYMBIOT_MAC: ' + path_text + '\n')
+            i += 1
         fo.close()
         i = 0
         with codecs.open('config.conf', 'w', encoding="utf-8") as fo:
             for line_lists in line_list:
                 fo.writelines(line_list[i])
                 # print('writing:', line_list[i])
-                i+=1
+                i += 1
         fo.close()
         print('updated: symbiot mac configuration')
         # = True
         symbiot_mac_configuration = path_text
         self.symbiotMACFunction()
-
-
 
     # Audio Index Settings
     def indexAudioConfigurationFunction(self):
@@ -3662,25 +3984,25 @@ class App(QMainWindow):
         global audio_configuration
         line_list = []
         path_text = self.indexAudioEdit.text()
-        print('Path Entered:',path_text)
+        print('Path Entered:', path_text)
         if os.path.exists(path_text):
-            print('Path Exists:',path_text)
+            print('Path Exists:', path_text)
             with open('config.conf', 'r') as fo:
                 for line in fo:
                     line_list.append(line)
             i = 0
             for line_lists in line_list:
                 if line_list[i].startswith('DIRAUD:'):
-                    print('Replacing list item:',line_list[i], 'with',path_text)
-                    line_list[i] = str('DIRAUD: '+path_text+'\n')
-                i+=1
+                    print('Replacing list item:', line_list[i], 'with', path_text)
+                    line_list[i] = str('DIRAUD: ' + path_text + '\n')
+                i += 1
             fo.close()
             i = 0
             with open('config.conf', 'w') as fo:
                 for line_lists in line_list:
                     fo.writelines(line_list[i])
                     # print('writing:', line_list[i])
-                    i+=1
+                    i += 1
             fo.close()
             print('updated: audio path configuration')
             check_index_audio_config = True
@@ -3724,25 +4046,25 @@ class App(QMainWindow):
         global video_configuration
         line_list = []
         path_text = self.indexVideoEdit.text()
-        print('Path Entered:',path_text)
+        print('Path Entered:', path_text)
         if os.path.exists(path_text):
-            print('Path Exists:',path_text)
+            print('Path Exists:', path_text)
             with open('config.conf', 'r') as fo:
                 for line in fo:
                     line_list.append(line)
             i = 0
             for line_lists in line_list:
                 if line_list[i].startswith('DIRVID:'):
-                    print('Replacing list item:',line_list[i], 'with',path_text)
-                    line_list[i] = str('DIRVID: '+path_text+'\n')
-                i+=1
+                    print('Replacing list item:', line_list[i], 'with', path_text)
+                    line_list[i] = str('DIRVID: ' + path_text + '\n')
+                i += 1
             fo.close()
             i = 0
             with open('config.conf', 'w') as fo:
                 for line_lists in line_list:
                     fo.writelines(line_list[i])
                     # print('writing:', line_list[i])
-                    i+=1
+                    i += 1
             fo.close()
             print('updated: video path configuration')
             check_index_video_config = True
@@ -4374,37 +4696,42 @@ class App(QMainWindow):
             check_index_drive8_config = False
         self.indexDrive8ConfigurationFunction()
 
-    def paintEvent(self, e):
-        qp = QPainter()
-        qp.begin(self)
-        self.drawRectangles(qp)
-        qp.end()
+    # def drawRectangles(self, qp):
+    #
+    #
+    #     # # SpeechRecognition Color
+    #     # qp.setBrush(QColor(25, 24, 25)) # 1
+    #     # # Dimensions: MOVE: width, height. RECT-SIZE: width height
+    #     # qp.drawRect(20, 45, 740, 120) # 1
+    #
+    #     # qp.setBrush(QColor(0, 255, 0))  # 2a
+    #     # qp.drawRect(16, 41, 748, 4)  # 2a
+    #     #
+    #     # qp.setBrush(QColor(0, 255, 0))  # 2b
+    #     # qp.drawRect(16, 45, 4, 120)  # 2b
+    # # Settings Index Engine Configuration
 
     def drawRectangles(self, qp):
-        #SpeechRecognition
-        #Color
-        qp.setBrush(QColor(25, 24, 25))
-        #Dimensions: MOVE: width, height. RECT-SIZE: width height
-        qp.drawRect(20, 45, 740, 120)
+        if showHideValue == 1:
+            qp.setBrush(QColor(25, 24, 25))
+            qp.drawRect(20, 200, 740, 90)
 
-        #Settings Index Engine Configuration
-        qp.setBrush(QColor(25, 24, 25))
-        qp.drawRect(20, 200, 740, 90)
+            # Settings Top Divider
+            qp.setBrush(QColor(0, 0, 0))
+            qp.drawRect(358, 200, 4, 90)
 
-        #Settings Top Divider
-        qp.setBrush(QColor(0, 0, 0))
-        qp.drawRect(358, 200, 4, 90)
+            # Symbiot Settings
+            qp.setBrush(QColor(25, 24, 25))
+            qp.drawRect(20, 320, 740, 100)
 
-        # Symbiot Settings
-        qp.setBrush(QColor(25, 24, 25))
-        qp.drawRect(20, 320, 740, 100)
+            # Symbiot Top Divider
+            qp.setBrush(QColor(0, 0, 0))
+            qp.drawRect(358, 320, 4, 100)
 
-        # Symbiot Top Divider
-        qp.setBrush(QColor(0, 0, 0))
-        qp.drawRect(358, 320, 4, 100)
 
 runIndexEnginesFunction()
 time.sleep(1)
+
 
 class guiControllerClass(QThread):
     def __init__(self, srInfo, textBoxValue, textBoxVerbose1, textBoxVerbose2):
@@ -4435,12 +4762,14 @@ class guiControllerClass(QThread):
         self.textBoxVerbose2.setText("")
         self.terminate()
 
+
 class configInteractionPermissionClass(QThread):
     def __init__(self, indexAudioEnableDisableButton, indexVideoEnableDisableButton, indexImageEnableDisableButton,
                  indexTextEnableDisableButton, indexAudioEdit, indexVideoEdit, indexImagesEdit, indexTextEdit,
                  indexAudioButton, indexVideoButton, indexImageButton, indexTextButton, drive1EnableDisableButton,
                  drive2EnableDisableButton, drive3EnableDisableButton, drive4EnableDisableButton, drive1TextEdit,
-                 drive2TextEdit, drive3TextEdit, drive4TextEdit, drive1Button, drive2Button, drive3Button, drive4Button):
+                 drive2TextEdit, drive3TextEdit, drive4TextEdit, drive1Button, drive2Button, drive3Button,
+                 drive4Button):
         QThread.__init__(self)
         self.indexAudioEnableDisableButton = indexAudioEnableDisableButton
         self.indexVideoEnableDisableButton = indexVideoEnableDisableButton
@@ -4513,6 +4842,7 @@ class configInteractionPermissionClass(QThread):
             # print('unlocking:',index_enable_disable_button_item[i])
             i += 1
 
+
 class textBoxVerbose2Class(QThread):
     def __init__(self, textBoxVerbose2):
         QThread.__init__(self)
@@ -4526,6 +4856,7 @@ class textBoxVerbose2Class(QThread):
         sppid_str = str(sppid)
         sppid_str2 = str('subprocess PID: ')
         self.textBoxVerbose2.setText(sppid_str2 + sppid_str)
+
 
 class openDirectoryClass(QThread):
     def __init__(self, textBoxVerbose, textBoxVerbose2):
@@ -4541,7 +4872,6 @@ class openDirectoryClass(QThread):
         global directory_index_file
         secondary_key_no_space = secondary_key.replace(' ', '')
         print('plugged in: openDirectoryClass')
-        # self.textBoxVerbose.setText("searching directories for: " + secondary_key)
         found_list = []
         dir_i = 0
         for directory_index_files in directory_index_file:
@@ -4561,9 +4891,8 @@ class openDirectoryClass(QThread):
                         line2 = line2.replace(')', '')
                         line2 = line2.replace('(', '')
                         line2 = line2.replace(' ', '')
-                        # print(line)
 
-                        if line2.endswith(secondary_key_no_space+'"'):
+                        if line2.endswith(secondary_key_no_space + '"'):
                             print(line)
                             found_list.append(line)
                 dir_i += 1
@@ -4575,10 +4904,10 @@ class openDirectoryClass(QThread):
         print('search complete...')
 
         # Currently, ensure only one result will open. (later, better formula for best match in found_list instead [0])
-        if len(found_list) >=1:
-            # self.textBoxVerbose2.setText('opening: ' + found_list[0])
+        if len(found_list) >= 1:
             os.startfile(found_list[0])
             found_list = []
+
 
 class findOpenAudioClass(QThread):
     def __init__(self, target_index, multiple_matches, target_match, textBoxVerbose1):
@@ -4599,17 +4928,14 @@ class findOpenAudioClass(QThread):
         result_count = 0
         with codecs.open(audio_index_file, 'r', encoding='utf-8') as fo:
             for line in fo:
-                # Prepare Line
                 line = line.strip()
                 line = line.lower()
                 line = line.replace('"', '')
                 line = str('"' + line + '"')
-                # Human Name
                 human_name = line
                 idx = human_name.find('\\')
                 human_name = human_name[idx:]
                 if secondary_key in line:
-                    # Match Count and accounting
                     result_count += 1
                     idx = line.rfind('\\')
                     human_name = line[idx:]
@@ -4619,24 +4945,24 @@ class findOpenAudioClass(QThread):
                     target_match = line
                 else:
                     pass
-        #Check for matches
+        # Check for matches
         if result_count == 0:
-            #speaker.Speak("nothing found for "+secondary_key)
-            print("nothing found for",secondary_key)
-            self.textBoxVerbose1.setText("nothing found for: "+secondary_key)
+            # speaker.Speak("nothing found for "+secondary_key)
+            print("nothing found for", secondary_key)
+            self.textBoxVerbose1.setText("nothing found for: " + secondary_key)
         else:
             i = 0
             # More than one result
             if result_count > 1:
-                print('matching results:',result_count)
+                print('matching results:', result_count)
                 string_result_count = str(result_count)
-                #speaker.Speak(string_result_count + ' matches for ' + secondary_key)
+                # speaker.Speak(string_result_count + ' matches for ' + secondary_key)
                 for multiple_matchess in multiple_matches:
                     print(multiple_matches[i])
                     i += 1
             # Exactly One Result
             if result_count == 1:
-                print('matching results:',result_count)
+                print('matching results:', result_count)
                 print('found:', target_match)
                 self.textBoxVerbose1.setText("Found")
                 target_match = target_match.strip()
@@ -4644,9 +4970,11 @@ class findOpenAudioClass(QThread):
                 # Users Default Player (Option 1)
                 os.startfile(target_match)
 
+
 class findOpenImageClass(QThread):
     def __init__(self):
         QThread.__init__(self)
+
     def run(self):
         global image_index_file
         global secondary_key
@@ -4667,9 +4995,11 @@ class findOpenImageClass(QThread):
                 print(found_file[i])
                 i += 1
 
+
 class findOpenTextClass(QThread):
     def __init__(self):
         QThread.__init__(self)
+
     def run(self):
         global text_index_file
         global secondary_key
@@ -4689,6 +5019,7 @@ class findOpenTextClass(QThread):
             for found_files in found_file:
                 print(found_file[i])
                 i += 1
+
 
 class findOpenVideoClass(QThread):
     def __init__(self):
@@ -4715,6 +5046,7 @@ class findOpenVideoClass(QThread):
                 print(found_file[i])
                 i += 1
 
+
 class findOpenProgramClass(QThread):
     def __init__(self):
         QThread.__init__(self)
@@ -4739,6 +5071,7 @@ class findOpenProgramClass(QThread):
             for found_files in found_file:
                 print(found_file[i])
                 i += 1
+
 
 class commandSearchClass(QThread):
     def __init__(self, textBoxVerbose1, textBoxVerbose2, textBoxVerbose2Thread):
@@ -4765,7 +5098,7 @@ class commandSearchClass(QThread):
                 idx = line.rfind('\\') + 1
                 linefind = line[idx:].replace('.py"', '')
                 if search_str.startswith(linefind):
-                    self.textBoxVerbose1.setText('running command: python '+linefind+'.py')
+                    self.textBoxVerbose1.setText('running command: python ' + linefind + '.py')
                     print('found command file:', line)
                     line = line.strip()
                     cmd = ('python ' + line)
@@ -4780,14 +5113,17 @@ class commandSearchClass(QThread):
             if found == False:
                 self.textBoxVerbose1.setText("command not found")
 
+
 # Store socket here for closing when thread is stopped
 sock_con = ()
 
+
 class symbiotServerClass(QThread):
-    def __init__(self, speechRecognitionThread, symbiotButton, speechRecognitionOffFunction):
+    def __init__(self, speechRecognitionThread, symbiotButton, speechRecognitionOffFunction, speechRecognitionOnFunction):
         QThread.__init__(self)
         self.symbiotButton = symbiotButton
         self.speechRecognitionOffFunction = speechRecognitionOffFunction
+        self.speechRecognitionOnFunction = speechRecognitionOnFunction
 
     def run(self):
         global sock_con
@@ -4815,7 +5151,7 @@ class symbiotServerClass(QThread):
                     if port == 0:
                         print('symbiot server port configuration:', port, '/ any available port')
                     else:
-                        print('symbiot server port configuration:',port)
+                        print('symbiot server port configuration:', port)
                 if line.startswith('SYMBIOT_IP: '):
                     symbiot_ip = line.replace('SYMBIOT_IP: ', '')
                     symbiot_ip = symbiot_ip.strip()
@@ -4842,13 +5178,13 @@ class symbiotServerClass(QThread):
                 # Print Client IP and Port
                 ip = str(addr[0])
                 port = str(addr[1])
-                client_info = ('ip='+ip+'  '+'port='+str(port))
+                client_info = ('ip=' + ip + '  ' + 'port=' + str(port))
                 print('client connected: ', client_info)
 
                 # log here later
 
                 # scan for mac as a security measure. mac spoofing is easy so later read a pw from ssl wrapped message.
-                cmd = 'arp -a '+addr[0]
+                cmd = 'arp -a ' + addr[0]
                 print('scanning client:', cmd)
                 xcmd = subprocess.check_output(cmd, shell=False, startupinfo=info)
 
@@ -4877,7 +5213,8 @@ class symbiotServerClass(QThread):
                         if connection_message == sr_on_message:
                             print('client', addr[0], 'has command-string')
                             print('starting speech recognition thread...')
-                            speechRecognitionThread.start()
+                            # speechRecognitionThread.start()
+                            self.speechRecognitionOnFunction()
                         elif connection_message == sr_off_message:
                             print('client', addr[0], 'has command-string')
                             print('stopping speech recognition thread...')
@@ -4903,10 +5240,11 @@ class symbiotServerClass(QThread):
         global sock_con
         sock_con.close()
         self.terminate()
-        
+
 
 class speechRecognitionClass(QThread):
-    def __init__(self, srIndicator, textBoxValue, textBoxVerbose1, textBoxVerbose2, textBoxVerbose2Thread, srInfo, guiControllerThread, commandSearchThread):
+    def __init__(self, srIndicator, textBoxValue, textBoxVerbose1, textBoxVerbose2, textBoxVerbose2Thread, srInfo,
+                 guiControllerThread, commandSearchThread, srOnButton):
         QThread.__init__(self)
         self.srInfo = srInfo
         self.textBoxValue = textBoxValue
@@ -4916,6 +5254,7 @@ class speechRecognitionClass(QThread):
         self.textBoxVerbose2Thread = textBoxVerbose2Thread
         self.commandSearchThread = commandSearchThread
         self.srIndicator = srIndicator
+        self.srOnButton = srOnButton
 
     def run(self):
         print('plugged in thread: speechRecognitionThread')
@@ -4923,24 +5262,28 @@ class speechRecognitionClass(QThread):
         global value
         global sppid
         global currentAudioMedia
+
         r = sr.Recognizer()
         m = sr.Microphone()
 
+
         try:
-            pixmap = QPixmap('./Resources/speech-recognition-LEDOn.png')
+            pixmap = QPixmap('./Resources/image/sr_indicator_on_icon.png')
             self.srIndicator.setPixmap(pixmap)
             self.srInfo.setText("A moment of silence please...")
-            with m as source: r.adjust_for_ambient_noise(source)
+            with m as source:
+                r.adjust_for_ambient_noise(source)
             self.srInfo.setText("Set minimum energy threshold to {}".format(r.energy_threshold))
 
             while True:
                 self.srInfo.setText("Waiting for command")
-                with m as source: audio = r.listen(source)
+                with m as source:
+                    audio = r.listen(source)
                 self.srInfo.setText("Attempting to recognize audio...")
 
                 try:
                     value = r.recognize_google(audio).lower()
-                    self.textBoxValue.setText('Interpretation: '+ value)
+                    self.textBoxValue.setText('Interpretation: ' + value)
                     self.guiControllerThread.start()
 
                     with codecs.open(secondary_key_store, 'w', encoding='utf-8') as fo:
@@ -4989,9 +5332,10 @@ class speechRecognitionClass(QThread):
             pass
 
     def stop_sr(self):
-        pixmap = QPixmap('./Resources/speech-recognition-LEDOff.png')
+        pixmap = QPixmap('./Resources/image/sr_indicator_off_icon.png')
         self.srIndicator.setPixmap(pixmap)
         self.terminate()
+
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)

@@ -1,17 +1,13 @@
 # FILE-INDEXER/VALUE-GENERATOR, Written by Benjamin Jack Cullen
 
 import os
-import sys
 import csv
 import time
-import datetime
 import codecs
 import distutils.dir_util
-import fileinput
 import datetime
 
 start_t = datetime.datetime.now()
-# print(start_t)
 
 # Files & Paths
 mainDir = 'Indexes'
@@ -39,18 +35,18 @@ def write_index():
     global live_path
     global indexed_path
     global write_request
-    print('index d1 directory: writing...')
+    print('--', start_t, 'index d1 directory: writing...')
     refreshIndex = open(rawUserDirectory, "w").close()
     for dirname, dirnames, filenames in os.walk(dir_target_d1):
         for subdirname in dirnames:
             fullpath = os.path.join(dir_target_root_d1, dirname, subdirname)
-            print('writing path:',fullpath)
+            # print('--', start_t, 'index d1 directory: writing path:',fullpath)
             to_file_path.append(fullpath)
 
     i = 0
     for to_file_paths in to_file_path:
         txtFile = codecs.open(rawUserDirectory, "a", encoding="utf-8")
-        print('writing path:', to_file_path[i])
+        # print('--', start_t, 'index d1 directory: writing path:', to_file_path[i])
         txtFile.writelines(to_file_path[i] + "\n")
         txtFile.close()
         i += 1
@@ -64,19 +60,19 @@ def write_index():
         writer.writerow(row)
     ifile.close()
     ofile.close()
-    print('index d1 directory: wrote.')
+    # print('--', start_t, 'index d1 directory: wrote.')
     write_request = False
 
 def get_live_paths():
     global dir_target_d1
     global dir_target_root_d1
     global live_path
-    print('attaining paths...')
+    print('--', start_t, 'index d1 directory: attaining paths...')
     for dirname, dirnames, filenames in os.walk(dir_target_d1):
         for subdirname in dirnames:
             fullpath = os.path.join(dir_target_root_d1, dirname, subdirname)
             if fullpath not in live_path:
-                print('live path:',fullpath)
+                # print('--', start_t, 'index d1 directory: 'live path=',fullpath)
                 live_path.append(fullpath)
 
 def get_indexed_paths():
@@ -87,18 +83,18 @@ def get_indexed_paths():
             line = line.strip()
             line = line.replace('"','')
             if line not in indexed_path:
-                print('indexed path:', line)
+                # print('--', start_t, 'index d1 directory: indexed path=', line)
                 indexed_path.append(line)
 
 def compare_index_to_live_path():
     global live_path
     global indexed_path
     global write_request
-    print('comparing indexed paths to live paths')
+    print('--', start_t, 'index d1 directory: comparing indexed paths to live paths...')
     i = 0
     for indexed_paths in indexed_path:
         if indexed_path[i] not in live_path:
-            print('not in fs:', indexed_path[i])
+            print('--', start_t, 'index d1 directory: not in fs:', indexed_path[i])
             write_request = True
         i += 1
 
@@ -106,11 +102,11 @@ def compare_live_path_to_index():
     global live_path
     global indexed_path
     global write_request
-    print('comparing live paths to indexed paths')
+    print('--', start_t, 'index d1 directory: comparing live paths to indexed paths')
     i = 0
     for live_paths in live_path:
         if live_path[i] not in indexed_path:
-            print('not indexed:',live_path[i])
+            # print('--', start_t, 'index d1 directory: not indexed:',live_path[i])
             write_request = True
         i += 1
     
@@ -124,7 +120,7 @@ def get_config():
                 dir_target_d1 = line.replace('DRIVE1:', '')
                 dir_target_d1 = dir_target_d1.strip()
                 dir_target_root_d1 = str(dir_target_d1.split('\\')[0]+'\\')
-                print(dir_target_root_d1, dir_target_d1)
+                print('--', start_t, 'index d1 directory: path=', dir_target_d1, 'root=', dir_target_root_d1)
 
 while 1 == 1:
     if not os.path.exists(rawUserDirectory):
@@ -141,10 +137,10 @@ while 1 == 1:
         indexed_path = []
         live_path = []
         if write_request == True:
-            # print('re-write request: True')
+            # print('--index d1 directory: re-write request: True')
             write_index()
 ##        elif write_request == False:
-            # print('re-write request: False')
+            # print('--index d1 directory: re-write request: False')
 ##    else:
-##        print('waiting for path to be updated in config.conf')
+##        print('--index d1 directory: waiting for path to be updated in config.conf')
         time.sleep(1)

@@ -1,0 +1,23 @@
+1. Make sure you install all required modules correctly.
+
+2. In config.conf line; SYMBIOT_SERVER: your IP. (space delimeted after ':').
+
+2. Run Information-Control-System.py (main proogram).
+
+3. Turn on indexing for fortmulaic file; play/run/open.
+
+4. Turn on...
+
+The fun part:
+1. Place any of your code you wish to run by voice, in plugins directory.
+2. Just say the name of the file and it will be run automatically!
+	example: 'sony bravia turn on', runs sonybraviaturnon.py
+
+This is a framework to run anything, control anything and to get
+information about anything.
+
+Automatic webcrawlers can be made to store information in Transcriptions 
+directory that can be searched for by keywords and dictated on voice request,
+this way you might not know whats there but you can query. (More auto
+crawlers on key websites the better, for more information available on
+request).
