@@ -14,7 +14,7 @@ from PyQt5.QtWidgets import QMainWindow, QApplication, QPushButton, QLineEdit, Q
 from PyQt5.QtCore import Qt
 from PyQt5.QtCore import QThread
 from PyQt5.QtCore import QCoreApplication
-from PyQt5.QtGui import QIcon, QPixmap
+from PyQt5.QtGui import QIcon, QPixmap, QPainter, QColor
 from PyQt5 import QtGui
 from PyQt5 import QtCore
 
@@ -1564,11 +1564,14 @@ class App(QMainWindow):
         self.srIndicator.setPixmap(pixmap)
         self.srIndicator.hide()
 
+        sr_font = QtGui.QFont("Times", 10, QtGui.QFont.Bold)
+
         # Create Speech Interpretation Info
         self.srInfo = QLineEdit(self)
-        self.srInfo.move(70, 30)
-        self.srInfo.resize(700, 20)
+        self.srInfo.move(54, 30)
+        self.srInfo.resize(717, 24)
         self.srInfo.setReadOnly(True)
+        self.srInfo.setFont(sr_font)
         self.srInfo.setStyleSheet(
             """QLineEdit {background-color: black;
             border:1px solid rgb(0, 0, 255);
@@ -1579,9 +1582,10 @@ class App(QMainWindow):
         )
         # Create Speech Interpretation TextBox
         self.textBoxValue = QLineEdit(self)
-        self.textBoxValue.move(70, 50)
-        self.textBoxValue.resize(700, 20)
+        self.textBoxValue.move(54, 54)
+        self.textBoxValue.resize(717, 24)
         self.textBoxValue.setReadOnly(True)
+        self.textBoxValue.setFont(sr_font)
         self.textBoxValue.setStyleSheet(
             """QLineEdit {background-color: black;
             border-top:1px solid rgb(0, 0, 0);
@@ -1595,9 +1599,10 @@ class App(QMainWindow):
 
         # Create verbose textbox
         self.textBoxVerbose1 = QLineEdit(self)
-        self.textBoxVerbose1.move(70, 70)
-        self.textBoxVerbose1.resize(700, 20)
+        self.textBoxVerbose1.move(54, 78)
+        self.textBoxVerbose1.resize(717, 24)
         self.textBoxVerbose1.setReadOnly(True)
+        self.textBoxVerbose1.setFont(sr_font)
         self.textBoxVerbose1.setStyleSheet(
             """QLineEdit {background-color: black;
             border:1px solid rgb(0, 0, 255);
@@ -1609,9 +1614,10 @@ class App(QMainWindow):
         )
         # Create verbose textbox2
         self.textBoxVerbose2 = QLineEdit(self)
-        self.textBoxVerbose2.move(70, 90)
-        self.textBoxVerbose2.resize(700, 20)
+        self.textBoxVerbose2.move(54, 102)
+        self.textBoxVerbose2.resize(717, 24)
         self.textBoxVerbose2.setReadOnly(True)
+        self.textBoxVerbose2.setFont(sr_font)
         self.textBoxVerbose2.setStyleSheet(
             """QLineEdit {background-color: black;
             border:1px solid rgb(0, 0, 255);
@@ -1746,7 +1752,7 @@ class App(QMainWindow):
 
         # Wiki Server IP Button
         self.wikiServerIPButton = QPushButton(self)
-        self.wikiServerIPButton.move(570, 283)
+        self.wikiServerIPButton.move(580, 283)
         self.wikiServerIPButton.resize(75, 20)
         self.wikiServerIPButton.setText('Wiki Server')
         self.wikiServerIPButton.clicked.connect(self.wikiServerIPFunction)
@@ -1757,7 +1763,7 @@ class App(QMainWindow):
         )
         # Wiki Server IP Edit
         self.wikiServerIPEdit = QLineEdit(self)
-        self.wikiServerIPEdit.move(640, 283)
+        self.wikiServerIPEdit.move(645, 283)
         self.wikiServerIPEdit.resize(110, 20)
         self.wikiServerIPEdit.setReadOnly(True)
         self.wikiServerIPEdit.setText(wiki_local_server_ip_configuration)  # .replace('SYMBIOT_SERVER: ', ''))
@@ -1771,8 +1777,8 @@ class App(QMainWindow):
         )
         # Wiki Server Port Button
         self.wikiServerPortButton = QPushButton(self)
-        self.wikiServerPortButton.move(570, 298)
-        self.wikiServerPortButton.resize(125, 20)
+        self.wikiServerPortButton.move(580, 298)
+        self.wikiServerPortButton.resize(100, 20)
         self.wikiServerPortButton.setText('Wiki Server Port')
         self.wikiServerPortButton.clicked.connect(self.wikiServerPortFunction)
         self.wikiServerPortButton.setStyleSheet(
@@ -4711,22 +4717,31 @@ class App(QMainWindow):
     #     # qp.drawRect(16, 45, 4, 120)  # 2b
     # # Settings Index Engine Configuration
 
+    def paintEvent(self, e):
+        qp = QPainter()
+        qp.begin(self)
+        self.drawRectangles(qp)
+        qp.end()
+
     def drawRectangles(self, qp):
+
         if showHideValue == 1:
-            qp.setBrush(QColor(25, 24, 25))
-            qp.drawRect(20, 200, 740, 90)
 
             # Settings Top Divider
-            qp.setBrush(QColor(0, 0, 0))
-            qp.drawRect(358, 200, 4, 90)
+            qp.setBrush(QColor(0, 0, 255))
+            qp.drawRect(3, 145, 818, 2)
 
-            # Symbiot Settings
-            qp.setBrush(QColor(25, 24, 25))
-            qp.drawRect(20, 320, 740, 100)
+            # Settings Left Divider
+            qp.setBrush(QColor(0, 0, 255))
+            qp.drawRect(3, 145, 2, 245)
 
-            # Symbiot Top Divider
-            qp.setBrush(QColor(0, 0, 0))
-            qp.drawRect(358, 320, 4, 100)
+            # Settings Right Divider
+            qp.setBrush(QColor(0, 0, 255))
+            qp.drawRect(818, 145, 2, 245)
+
+            # Settings Bottom Divider
+            qp.setBrush(QColor(0, 0, 255))
+            qp.drawRect(3, 390, 818, 2)
 
 
 runIndexEnginesFunction()
