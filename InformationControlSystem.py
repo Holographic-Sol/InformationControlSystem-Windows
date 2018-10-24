@@ -3578,11 +3578,11 @@ class App(QMainWindow):
 
         elif menu_page == 2:
             print('-- settings menu page left')
+            menu_page -= 1
             self.hideSymbiotSettings()
             self.hideIndexSettings()
 
             self.showWikiSettings()
-            menu_page -= 1
 
 
     def cycleSettingsMenuFunction(self):
@@ -3591,26 +3591,26 @@ class App(QMainWindow):
         if menu_page == 0:
             print('settings menu page right')
             menu_page += 1
-            self.hideSymbiotSettings()
-            self.hideWikiSettings()
-
-            self.showIndexSettings()
-
-        elif menu_page == 1:
-            print('settings menu page right')
-            menu_page += 1
             self.hideIndexSettings()
             self.hideWikiSettings()
 
             self.showSymbiotSettings()
 
-        elif menu_page == 2:
-            menu_page = 0
+        elif menu_page == 1:
             print('settings menu page right')
+            menu_page += 1
             self.hideIndexSettings()
             self.hideSymbiotSettings()
 
             self.showWikiSettings()
+
+        elif menu_page == 2:
+            menu_page = 0
+            print('settings menu page right')
+            self.hideWikiSettings()
+            self.hideSymbiotSettings()
+
+            self.showIndexSettings()
 
     def showHideSettingsFunction(self):
         global showHideValue
