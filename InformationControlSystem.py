@@ -2160,7 +2160,7 @@ class App(QMainWindow):
             color: grey;}"""
         )
         self.drive1EnableDisableButton = QPushButton(self)
-        self.drive1EnableDisableButton.move(515, 168)
+        self.drive1EnableDisableButton.move(494.5, 168)
         self.drive1EnableDisableButton.resize(24.5, 24.5)
         # self.drive1EnableDisableButton.setText(drive_1_active_config)
         # self.drive1EnableDisableButton.setIcon(QIcon("./Resources/image/index_on_icon.png"))
@@ -2209,7 +2209,7 @@ class App(QMainWindow):
             color: grey;}"""
         )
         self.drive2EnableDisableButton = QPushButton(self)
-        self.drive2EnableDisableButton.move(515, 192.5)
+        self.drive2EnableDisableButton.move(494.5, 192.5)
         self.drive2EnableDisableButton.resize(24.5, 24.5)
         # self.drive2EnableDisableButton.setText(drive_2_active_config)
         # self.drive2EnableDisableButton.setIcon(QIcon("./Resources/image/index_on_icon.png"))
@@ -2258,7 +2258,7 @@ class App(QMainWindow):
             color: grey;}"""
         )
         self.drive3EnableDisableButton = QPushButton(self)
-        self.drive3EnableDisableButton.move(515, 217)
+        self.drive3EnableDisableButton.move(494.5, 217)
         self.drive3EnableDisableButton.resize(24.5, 24.5)
         # self.drive3EnableDisableButton.setText(drive_3_active_config)
         # self.drive1EnableDisableButton.setIcon(QIcon("./Resources/image/feature_on_icon.png"))
@@ -2305,7 +2305,7 @@ class App(QMainWindow):
             color: grey;}"""
         )
         self.drive4EnableDisableButton = QPushButton(self)
-        self.drive4EnableDisableButton.move(515, 241.5)
+        self.drive4EnableDisableButton.move(494.5, 241.5)
         self.drive4EnableDisableButton.resize(24.5, 24.5)
         # self.drive4EnableDisableButton.setText(drive_4_active_config)
         # self.drive4EnableDisableButton.setIcon(QIcon("./Resources/image/index_on_icon.png"))
@@ -2339,7 +2339,7 @@ class App(QMainWindow):
            border: false;}"""
         )
         self.drive5TextEdit = QLineEdit(self)
-        self.drive5TextEdit.move(610, 168)
+        self.drive5TextEdit.move(589.5, 168)
         self.drive5TextEdit.resize(100, 24.5)
         self.drive5TextEdit.setReadOnly(True)
         self.drive5TextEdit.setText(drive5_configuration.replace('DRIVE5: ', ''))
@@ -2352,7 +2352,7 @@ class App(QMainWindow):
             color: grey;}"""
         )
         self.drive5EnableDisableButton = QPushButton(self)
-        self.drive5EnableDisableButton.move(710, 168)
+        self.drive5EnableDisableButton.move(689.5, 168)
         self.drive5EnableDisableButton.resize(24.5, 24.5)
         # self.drive5EnableDisableButton.setText(drive_5_active_config)
         # self.drive5EnableDisableButton.setIcon(QIcon("./Resources/image/index_on_icon.png"))
@@ -2386,7 +2386,7 @@ class App(QMainWindow):
            border: false;}"""
         )
         self.drive6TextEdit = QLineEdit(self)
-        self.drive6TextEdit.move(610, 192.5)
+        self.drive6TextEdit.move(589.5, 192.5)
         self.drive6TextEdit.resize(100, 24.5)
         self.drive6TextEdit.setReadOnly(True)
         self.drive6TextEdit.setText(drive6_configuration.replace('DRIVE6: ', ''))
@@ -2399,7 +2399,7 @@ class App(QMainWindow):
             color: grey;}"""
         )
         self.drive6EnableDisableButton = QPushButton(self)
-        self.drive6EnableDisableButton.move(710, 192.5)
+        self.drive6EnableDisableButton.move(689.5, 192.5)
         self.drive6EnableDisableButton.resize(24.5, 24.5)
         # self.drive6EnableDisableButton.setText(drive_6_active_config)
         # self.drive6EnableDisableButton.setIcon(QIcon("./Resources/image/index_on_icon.png"))
@@ -2433,7 +2433,7 @@ class App(QMainWindow):
            border: false;}"""
         )
         self.drive7TextEdit = QLineEdit(self)
-        self.drive7TextEdit.move(610, 217)
+        self.drive7TextEdit.move(589.5, 217)
         self.drive7TextEdit.resize(100, 24.5)
         self.drive7TextEdit.setReadOnly(True)
         self.drive7TextEdit.setText(drive7_configuration.replace('DRIVE7: ', ''))
@@ -2446,7 +2446,7 @@ class App(QMainWindow):
             color: grey;}"""
         )
         self.drive7EnableDisableButton = QPushButton(self)
-        self.drive7EnableDisableButton.move(710, 217)
+        self.drive7EnableDisableButton.move(689.5, 217)
         self.drive7EnableDisableButton.resize(24.5, 24.5)
         # self.drive7EnableDisableButton.setText(drive_7_active_config)
         # self.drive7EnableDisableButton.setIcon(QIcon("./Resources/image/index_on_icon.png"))
@@ -2480,7 +2480,7 @@ class App(QMainWindow):
            border: false;}"""
         )
         self.drive8TextEdit = QLineEdit(self)
-        self.drive8TextEdit.move(610, 241.5)
+        self.drive8TextEdit.move(589.5, 241.5)
         self.drive8TextEdit.resize(100, 24.5)
         self.drive8TextEdit.setReadOnly(True)
         self.drive8TextEdit.setText(drive8_configuration.replace('DRIVE8: ', ''))
@@ -2493,7 +2493,7 @@ class App(QMainWindow):
             color: grey;}"""
         )
         self.drive8EnableDisableButton = QPushButton(self)
-        self.drive8EnableDisableButton.move(710, 241.5)
+        self.drive8EnableDisableButton.move(689.5, 241.5)
         self.drive8EnableDisableButton.resize(24.5, 24.5)
         # self.drive8EnableDisableButton.setText(drive_8_active_config)
         self.drive8EnableDisableButton.setIcon(QIcon("./Resources/image/index_on_icon.png"))
