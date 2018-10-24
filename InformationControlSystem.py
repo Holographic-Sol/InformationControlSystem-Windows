@@ -1472,23 +1472,23 @@ class App(QMainWindow):
         )
 
         # cycleSettingsMenuFunction
-        cycle_settings_menu = QPushButton(self)
-        cycle_settings_menu.move(784, 267.5)
-        cycle_settings_menu.resize(36, 36)
-        cycle_settings_menu.clicked.connect(self.cycleSettingsMenuFunction)
-        cycle_settings_menu.setIcon(QIcon("./Resources/image/baseline_keyboard_arrow_right_white_36dp.png"))
-        cycle_settings_menu.setStyleSheet(
+        self.cycle_settings_menu = QPushButton(self)
+        self.cycle_settings_menu.move(784, 267.5)
+        self.cycle_settings_menu.resize(36, 36)
+        self.cycle_settings_menu.clicked.connect(self.cycleSettingsMenuFunction)
+        self.cycle_settings_menu.setIcon(QIcon("./Resources/image/arrow_right_icon.png"))
+        self.cycle_settings_menu.setStyleSheet(
             """QPushButton{background-color: rgb(0, 0, 0);
            border:false;}"""
         )
 
         # cycleSettingsMenu Left Function
-        cycle_settings_menu_left = QPushButton(self)
-        cycle_settings_menu_left.move(5, 267.5)
-        cycle_settings_menu_left.resize(36, 36)
-        cycle_settings_menu_left.clicked.connect(self.cycleSettingsMenuLeftFunction)
-        cycle_settings_menu_left.setIcon(QIcon("./Resources/image/baseline_keyboard_arrow_left_white_36dp.png"))
-        cycle_settings_menu_left.setStyleSheet(
+        self.cycle_settings_menu_left = QPushButton(self)
+        self.cycle_settings_menu_left.move(5, 267.5)
+        self.cycle_settings_menu_left.resize(36, 36)
+        self.cycle_settings_menu_left.clicked.connect(self.cycleSettingsMenuLeftFunction)
+        self.cycle_settings_menu_left.setIcon(QIcon("./Resources/image/arrow_left_icon.png"))
+        self.cycle_settings_menu_left.setStyleSheet(
             """QPushButton{background-color: rgb(0, 0, 0);
            border:false;}"""
         )
@@ -1503,7 +1503,7 @@ class App(QMainWindow):
         def speechRecognitionOnFunction():
             global sr_active
             sr_active = True
-            self.srOnButton.setIcon(QIcon("./Resources/image/voice_image_icon.png"))
+            self.srOnButton.setIcon(QIcon("./Resources/image/voice_image_on_icon.png"))
             self.srOnButton.setStyleSheet(
                 """QPushButton {background-color: rgb(0, 0, 0);
                 border:1px solid rgb(0, 255, 0);}"""
@@ -1535,6 +1535,7 @@ class App(QMainWindow):
                 print('enabling symbiot server')
                 symbiotServerThread.start()
                 symbiot_configuration_Bool = True
+                symbiotButton.setIcon(QIcon("./Resources/image/symbiot_button_on_icon.png"))
                 symbiotButton.setStyleSheet(
                     """QPushButton {background-color: rgb(0, 0, 0);
                     border:1px solid rgb(0, 255, 0);}"""
@@ -1544,6 +1545,7 @@ class App(QMainWindow):
                 print('disabling symbiot server')
                 symbiotServerThread.symbiot_server_off()
                 symbiot_configuration_Bool = False
+                symbiotButton.setIcon(QIcon("./Resources/image/symbiot_button_icon.png"))
                 symbiotButton.setStyleSheet(
                     """QPushButton {background-color: rgb(0, 0, 0);
                     border:1px solid rgb(0, 0, 255);}"""
@@ -1555,7 +1557,7 @@ class App(QMainWindow):
         symbiotButton.resize(48, 48)
         symbiotButton.clicked.connect(symbiotEnableDisableFunction)
         if symbiot_configuration_Bool == True:
-            symbiotButton.setIcon(QIcon("./Resources/image/symbiot_button_icon.png"))
+            symbiotButton.setIcon(QIcon("./Resources/image/symbiot_button_on_icon.png"))
             symbiotButton.setStyleSheet(
                 """QPushButton{background-color: rgb(0, 0, 0);
                border:1px solid rgb(0, 0, 0);}"""
@@ -1588,7 +1590,7 @@ class App(QMainWindow):
         self.srIndicator.setPixmap(pixmap)
         self.srIndicator.hide()
 
-        sr_font = QtGui.QFont("Times", 10, QtGui.QFont.Bold)
+        sr_font = QtGui.QFont("Default", 10, QtGui.QFont.Bold)
 
         # Create Speech Interpretation Info
         self.srInfo = QLineEdit(self)
@@ -3621,7 +3623,7 @@ class App(QMainWindow):
             showHideValue = 1
             print('-- opening menu')
 
-            show_hide_settings.setIcon(QIcon("./Resources/image/setting_menu_icon.png"))
+            show_hide_settings.setIcon(QIcon("./Resources/image/setting_menu_on_icon.png"))
             show_hide_settings.setStyleSheet(
                 """QPushButton{background-color: rgb(0, 0, 0);
                border:1px solid rgb(0, 255, 0);}"""
