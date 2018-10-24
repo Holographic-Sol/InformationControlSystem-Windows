@@ -54,6 +54,7 @@ showHideValue = 0
 menu_page = 0
 show_hide_settings = ()
 sr_active = False
+show_hide_debug_Bool = False
 
 # Threads
 speechRecognitionThread = ()
@@ -1359,7 +1360,7 @@ class App(QMainWindow):
         self.minimal_extra_left = 547
         self.minimal_extra_top = 0
         self.minimal_extra_width = 826
-        self.minimal_extra_height = 400
+        self.minimal_extra_height = 308
 
         # Full Screen Geometry
         self.left_max = 0
@@ -1403,6 +1404,7 @@ class App(QMainWindow):
         global guiMode1Thread
         global show_hide_settings
         global sr_active
+        global show_hide_debug_Bool
 
         # UI Geometry
         self.setWindowTitle('Information & Control System')
@@ -1551,6 +1553,43 @@ class App(QMainWindow):
                     border:1px solid rgb(0, 0, 255);}"""
                 )
 
+        def showHideDebugFunction():
+            global show_hide_debug_Bool
+
+            if show_hide_debug_Bool == False:
+                print('enabling debug mode')
+                show_hide_debug_Bool = True
+                self.debugButton.setIcon(QIcon("./Resources/image/bug_report_on_icon.png"))
+                self.debugButton.setStyleSheet(
+                    """QPushButton {background-color: rgb(0, 0, 0);
+                    border:1px solid rgb(0, 255, 0);}"""
+                )
+                self.hideWikiSettings()
+                self.hideIndexSettings()
+                self.hideSymbiotSettings()
+                self.cycle_settings_menu.hide()
+                self.cycle_settings_menu_left.hide()
+                show_hide_settings.setIcon(QIcon("./Resources/image/setting_menu_icon.png"))
+                show_hide_settings.setStyleSheet(
+                    """QPushButton {background-color: rgb(0, 0, 0);
+                    border:1px solid rgb(0, 0, 255);}"""
+                )
+                # min
+                self.setGeometry(self.minimal_extra_left, self.minimal_extra_top, self.minimal_extra_width, self.minimal_extra_height)
+                self.setFixedSize(self.minimal_extra_width, self.minimal_extra_height)
+
+            elif show_hide_debug_Bool == True:
+                print('disabling  debug mode')
+                show_hide_debug_Bool = False
+                self.debugButton.setIcon(QIcon("./Resources/image/bug_report_icon.png"))
+                self.debugButton.setStyleSheet(
+                    """QPushButton {background-color: rgb(0, 0, 0);
+                    border:1px solid rgb(0, 0, 255);}"""
+                )
+                # min
+                self.setGeometry(self.minimal_left, self.minimal_top, self.minimal_width, self.minimal_height)
+                self.setFixedSize(self.minimal_width, self.minimal_height)
+
         # Symbiot On/Off
         symbiotButton = QPushButton(self)
         symbiotButton.move(3, 78)
@@ -1581,6 +1620,18 @@ class App(QMainWindow):
             """QPushButton{background-color: rgb(0, 0, 0);
            border:1px solid rgb(0, 0, 255);}"""
         )
+
+        # details/debug/dev
+        self.debugButton = QPushButton(self)
+        self.debugButton.move(774, 78)
+        self.debugButton.resize(48, 48)
+        self.debugButton.setIcon(QIcon("./Resources/image/bug_report_icon.png"))
+        self.debugButton.clicked.connect(showHideDebugFunction)
+        self.debugButton.setStyleSheet(
+            """QPushButton{background-color: rgb(0, 0, 0);
+           border:1px solid rgb(0, 0, 255);}"""
+        )
+        self.debugButton.hide()
 
         # Sr Indicator
         self.srIndicator = QLabel(self)
@@ -3623,6 +3674,15 @@ class App(QMainWindow):
             showHideValue = 1
             print('-- opening menu')
 
+            self.cycle_settings_menu.show()
+            self.cycle_settings_menu_left.show()
+
+            self.debugButton.setIcon(QIcon("./Resources/image/bug_report_icon.png"))
+            self.debugButton.setStyleSheet(
+                """QPushButton{background-color: rgb(0, 0, 0);
+               border:1px solid rgb(0, 0, 255);}"""
+            )
+
             show_hide_settings.setIcon(QIcon("./Resources/image/setting_menu_on_icon.png"))
             show_hide_settings.setStyleSheet(
                 """QPushButton{background-color: rgb(0, 0, 0);
@@ -4998,15 +5058,15 @@ class App(QMainWindow):
 
             # Settings Left Divider
             qp.setBrush(QColor(0, 0, 255))
-            qp.drawRect(3, 145, 2, 245)
+            qp.drawRect(3, 145, 2, 158.5)
 
             # Settings Right Divider
             qp.setBrush(QColor(0, 0, 255))
-            qp.drawRect(819, 145, 2, 245)
+            qp.drawRect(819, 145, 2, 158.5)
 
             # Settings Bottom Divider
             qp.setBrush(QColor(0, 0, 255))
-            qp.drawRect(3, 390, 818, 2)
+            qp.drawRect(3, 303.5, 818, 2)
 
 
 runIndexEnginesFunction()
