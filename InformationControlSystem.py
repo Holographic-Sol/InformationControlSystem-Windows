@@ -1473,24 +1473,24 @@ class App(QMainWindow):
 
         # cycleSettingsMenuFunction
         cycle_settings_menu = QPushButton(self)
-        cycle_settings_menu.move(787, 267.5)
+        cycle_settings_menu.move(784, 267.5)
         cycle_settings_menu.resize(36, 36)
         cycle_settings_menu.clicked.connect(self.cycleSettingsMenuFunction)
         cycle_settings_menu.setIcon(QIcon("./Resources/image/baseline_keyboard_arrow_right_white_36dp.png"))
         cycle_settings_menu.setStyleSheet(
             """QPushButton{background-color: rgb(0, 0, 0);
-           border:1px solid rgb(0, 0, 0);}"""
+           border:false;}"""
         )
 
         # cycleSettingsMenu Left Function
         cycle_settings_menu_left = QPushButton(self)
-        cycle_settings_menu_left.move(3, 267.5)
+        cycle_settings_menu_left.move(5, 267.5)
         cycle_settings_menu_left.resize(36, 36)
         cycle_settings_menu_left.clicked.connect(self.cycleSettingsMenuLeftFunction)
         cycle_settings_menu_left.setIcon(QIcon("./Resources/image/baseline_keyboard_arrow_left_white_36dp.png"))
         cycle_settings_menu_left.setStyleSheet(
             """QPushButton{background-color: rgb(0, 0, 0);
-           border:1px solid rgb(0, 0, 0);}"""
+           border:false;}"""
         )
 
 
@@ -5000,7 +5000,7 @@ class App(QMainWindow):
 
             # Settings Right Divider
             qp.setBrush(QColor(0, 0, 255))
-            qp.drawRect(818, 145, 2, 245)
+            qp.drawRect(819, 145, 2, 245)
 
             # Settings Bottom Divider
             qp.setBrush(QColor(0, 0, 255))
