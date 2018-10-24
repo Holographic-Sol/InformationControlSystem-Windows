@@ -1641,7 +1641,7 @@ class App(QMainWindow):
         self.srIndicator.setPixmap(pixmap)
         self.srIndicator.hide()
 
-        sr_font = QtGui.QFont("Default", 10, QtGui.QFont.Bold)
+        sr_font = QtGui.QFont("Times", 10, QtGui.QFont.Bold)
 
         # Create Speech Interpretation Info
         self.srInfo = QLineEdit(self)
