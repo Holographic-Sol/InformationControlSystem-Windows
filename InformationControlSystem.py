@@ -1835,7 +1835,7 @@ class App(QMainWindow):
 
         # Symbiot Settings
         self.symbiotTitle = QLabel(self)
-        self.symbiotTitle.move(54, 263)
+        self.symbiotTitle.move(54, 145)
         self.symbiotTitle.resize(100, 26)
         self.symbiotTitle.setText('Symbiot Settings:')
         self.symbiotTitle.setStyleSheet(
@@ -1845,7 +1845,7 @@ class App(QMainWindow):
         )
         # Symbiot Server IP Button
         self.symbiotServerIPButton = QPushButton(self)
-        self.symbiotServerIPButton.move(54, 283)
+        self.symbiotServerIPButton.move(54, 171)
         self.symbiotServerIPButton.resize(45, 24.5)
         self.symbiotServerIPButton.setText('Server IP')
         self.symbiotServerIPButton.clicked.connect(self.symbiotServerIPFunction)
@@ -1856,7 +1856,7 @@ class App(QMainWindow):
         )
         # Symbiot Server IP Edit
         self.symbiotServerIPEdit = QLineEdit(self)
-        self.symbiotServerIPEdit.move(130, 283)
+        self.symbiotServerIPEdit.move(130, 171)
         self.symbiotServerIPEdit.resize(120, 24.5)
         self.symbiotServerIPEdit.setReadOnly(True)
         self.symbiotServerIPEdit.setText(symbiot_server_ip_configuration)  # .replace('SYMBIOT_SERVER: ', ''))
@@ -1870,7 +1870,7 @@ class App(QMainWindow):
         )
         # Symbiot Server Port Button
         self.symbiotServerPortButton = QPushButton(self)
-        self.symbiotServerPortButton.move(54, 307.5)
+        self.symbiotServerPortButton.move(54, 195.5)
         self.symbiotServerPortButton.resize(55, 24.5)
         self.symbiotServerPortButton.setText('Server Port')
         self.symbiotServerPortButton.clicked.connect(self.symbiotServerPortFunction)
@@ -1881,7 +1881,7 @@ class App(QMainWindow):
         )
         # Symbiot Server Port Edit
         self.symbiotServerPortEdit = QLineEdit(self)
-        self.symbiotServerPortEdit.move(130, 307.5)
+        self.symbiotServerPortEdit.move(130, 195.5)
         self.symbiotServerPortEdit.resize(120, 24.5)
         self.symbiotServerPortEdit.setReadOnly(True)
         self.symbiotServerPortEdit.setText(symbiot_server_port_configuration)  # .replace('SYMBIOT_SERVER_PORT: ', ''))
@@ -1895,7 +1895,7 @@ class App(QMainWindow):
         )
         # Symbiot IP Button
         self.symbiotIPButton = QPushButton(self)
-        self.symbiotIPButton.move(54, 332)
+        self.symbiotIPButton.move(54, 220)
         self.symbiotIPButton.resize(55, 24.5)
         self.symbiotIPButton.setText('Symbiot IP')
         self.symbiotIPButton.clicked.connect(self.symbiotIPFunction)
@@ -1906,7 +1906,7 @@ class App(QMainWindow):
         )
         # Symbiot IP Edit
         self.symbiotIPEdit = QLineEdit(self)
-        self.symbiotIPEdit.move(130, 332)
+        self.symbiotIPEdit.move(130, 220)
         self.symbiotIPEdit.resize(120, 24.5)
         self.symbiotIPEdit.setReadOnly(True)
         self.symbiotIPEdit.setText(symbiot_ip_configuration)  # .replace('SYMBIOT_IP: ', ''))
@@ -1920,7 +1920,7 @@ class App(QMainWindow):
         )
         # Symbiot MAC Button
         self.symbiotMACButton = QPushButton(self)
-        self.symbiotMACButton.move(54, 356.5)
+        self.symbiotMACButton.move(54, 244.5)
         self.symbiotMACButton.resize(65, 24.5)
         self.symbiotMACButton.setText('Symbiot MAC')
         self.symbiotMACButton.clicked.connect(self.symbiotMACFunction)
@@ -1931,7 +1931,7 @@ class App(QMainWindow):
         )
         # Symbiot MAC Edit
         self.symbiotMACEdit = QLineEdit(self)
-        self.symbiotMACEdit.move(130, 356.5)
+        self.symbiotMACEdit.move(130, 244.5)
         self.symbiotMACEdit.resize(120, 24.5)
         self.symbiotMACEdit.setReadOnly(True)
         self.symbiotMACEdit.setText(symbiot_mac_configuration)  # .replace('SYMBIOT_MAC: ', ''))
