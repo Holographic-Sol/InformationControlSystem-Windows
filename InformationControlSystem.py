@@ -51,6 +51,7 @@ user_programs_dir = 'UserPrograms'
 
 # Data
 showHideValue = 0
+menu_page = 0
 show_hide_settings = ()
 sr_active = False
 
@@ -1470,6 +1471,29 @@ class App(QMainWindow):
            border:1px solid rgb(0, 0, 255);}"""
         )
 
+        # cycleSettingsMenuFunction
+        cycle_settings_menu = QPushButton(self)
+        cycle_settings_menu.move(787, 267.5)
+        cycle_settings_menu.resize(36, 36)
+        cycle_settings_menu.clicked.connect(self.cycleSettingsMenuFunction)
+        cycle_settings_menu.setIcon(QIcon("./Resources/image/baseline_keyboard_arrow_right_white_36dp.png"))
+        cycle_settings_menu.setStyleSheet(
+            """QPushButton{background-color: rgb(0, 0, 0);
+           border:1px solid rgb(0, 0, 0);}"""
+        )
+
+        # cycleSettingsMenu Left Function
+        cycle_settings_menu_left = QPushButton(self)
+        cycle_settings_menu_left.move(3, 267.5)
+        cycle_settings_menu_left.resize(36, 36)
+        cycle_settings_menu_left.clicked.connect(self.cycleSettingsMenuLeftFunction)
+        cycle_settings_menu_left.setIcon(QIcon("./Resources/image/baseline_keyboard_arrow_left_white_36dp.png"))
+        cycle_settings_menu_left.setStyleSheet(
+            """QPushButton{background-color: rgb(0, 0, 0);
+           border:1px solid rgb(0, 0, 0);}"""
+        )
+
+
         def srActiveFunction():
             if sr_active == False:
                 speechRecognitionOnFunction()
@@ -1632,38 +1656,38 @@ class App(QMainWindow):
             configInteractionPermissionThread.start()
 
         self.indexTitle = QLabel(self)
-        self.indexTitle.move(70, 148)
-        self.indexTitle.resize(100, 20)
-        self.indexTitle.setText('User Index Settings')
+        self.indexTitle.move(54, 145)
+        self.indexTitle.resize(100, 26)
+        self.indexTitle.setText('Media locations:')
         self.indexTitle.setStyleSheet(
             """QLabel {
-           color: yellow;
+           color: green;
            border: false;}"""
         )
         self.indexTitle2 = QLabel(self)
-        self.indexTitle2.move(390, 148)
-        self.indexTitle2.resize(120, 20)
-        self.indexTitle2.setText('Advanced Index Settings')
+        self.indexTitle2.move(370, 145)
+        self.indexTitle2.resize(120, 26)
+        self.indexTitle2.setText('Other search locations:')
         self.indexTitle2.setStyleSheet(
             """QLabel {
-           color: yellow;
+           color: green;
            border: false;}"""
         )
 
         # Wiki Settings
         self.wikiSettingsLabel = QLabel(self)
-        self.wikiSettingsLabel.move(390, 263)
-        self.wikiSettingsLabel.resize(100, 20)
-        self.wikiSettingsLabel.setText('Information Settings')
+        self.wikiSettingsLabel.move(54, 145)
+        self.wikiSettingsLabel.resize(100, 26)
+        self.wikiSettingsLabel.setText('Information Settings:')
         self. wikiSettingsLabel.setStyleSheet(
             """QLabel {
-           color: yellow;
+           color: green;
            border: false;}"""
         )
         # Wiki show in browser
         self.wikiShowBrowserLabel = QLabel(self)
-        self.wikiShowBrowserLabel.move(390, 283)
-        self.wikiShowBrowserLabel.resize(135, 20)
+        self.wikiShowBrowserLabel.move(54, 171)
+        self.wikiShowBrowserLabel.resize(135, 24.5)
         self.wikiShowBrowserLabel.setText('Show Wikipedia in Browser?')
         self.wikiShowBrowserLabel.setStyleSheet(
             """QLabel {
@@ -1672,17 +1696,19 @@ class App(QMainWindow):
         )
 
         self.wikiShowBrowserButton = QPushButton(self)
-        self.wikiShowBrowserButton.move(525, 283)
-        self.wikiShowBrowserButton.resize(50, 20)
+        self.wikiShowBrowserButton.move(189, 171)
+        self.wikiShowBrowserButton.resize(24.5, 24.5)
         if wiki_show_browser_Bool == False:
-            self.wikiShowBrowserButton.setText('Disabled')
+            # self.wikiShowBrowserButton.setText('Disabled')
+            self.wikiShowBrowserButton.setIcon(QIcon("./Resources/image/feature_on_icon.png"))
             self.wikiShowBrowserButton.setStyleSheet(
                 """QPushButton {background-color: rgb(0, 0, 0);
                color: red;
                border: false;}"""
             )
         elif wiki_show_browser_Bool == True:
-            self.wikiShowBrowserButton.setText('Enabled')
+            # self.wikiShowBrowserButton.setText('Enabled')
+            self.wikiShowBrowserButton.setIcon(QIcon("./Resources/image/feature_off_icon.png"))
             self.wikiShowBrowserButton.setStyleSheet(
                 """QPushButton {background-color: rgb(0, 0, 0);
                color: green;
@@ -1693,8 +1719,8 @@ class App(QMainWindow):
 
         # Dictate Wiki transcripts
         self.dictateWikiLabel = QLabel(self)
-        self.dictateWikiLabel.move(390, 298)
-        self.dictateWikiLabel.resize(135, 20)
+        self.dictateWikiLabel.move(54, 195.5)
+        self.dictateWikiLabel.resize(135, 24.5)
         self.dictateWikiLabel.setText('Dictate Wiki Transcripts?')
         self.dictateWikiLabel.setStyleSheet(
             """QLabel {
@@ -1702,17 +1728,19 @@ class App(QMainWindow):
            border: false;}"""
         )
         self.dictateWikiButton = QPushButton(self)
-        self.dictateWikiButton.move(525, 298)
-        self.dictateWikiButton.resize(50, 20)
+        self.dictateWikiButton.move(189, 195.5)
+        self.dictateWikiButton.resize(24.5, 24.5)
         if wiki_dictate_Bool == False:
-            self.dictateWikiButton.setText('Disabled')
+            # self.dictateWikiButton.setText('Disabled')
+            self.dictateWikiButton.setIcon(QIcon("./Resources/image/feature_off_icon.png"))
             self.dictateWikiButton.setStyleSheet(
                 """QPushButton {background-color: rgb(0, 0, 0);
                color: red;
                border: false;}"""
             )
         elif wiki_dictate_Bool == True:
-            self.dictateWikiButton.setText('Enabled')
+            # elf.dictateWikiButton.setText('Enabled')
+            self.dictateWikiButton.setIcon(QIcon("./Resources/image/feature_on_icon.png"))
             self.dictateWikiButton.setStyleSheet(
                 """QPushButton {background-color: rgb(0, 0, 0);
                color: green;
@@ -1723,8 +1751,8 @@ class App(QMainWindow):
 
         # Enable/Disable USE of Local Wiki Server
         self.useLocalWikiLabel = QLabel(self)
-        self.useLocalWikiLabel.move(390, 313)
-        self.useLocalWikiLabel.resize(135, 20)
+        self.useLocalWikiLabel.move(54, 220)
+        self.useLocalWikiLabel.resize(135, 24.5)
         self.useLocalWikiLabel.setText('Use Local Wiki Server?')
         self.useLocalWikiLabel.setStyleSheet(
             """QLabel {
@@ -1732,17 +1760,19 @@ class App(QMainWindow):
            border: false;}"""
         )
         self.useLocalWikiButton = QPushButton(self)
-        self.useLocalWikiButton.move(525, 313)
-        self.useLocalWikiButton.resize(50, 20)
+        self.useLocalWikiButton.move(189, 220)
+        self.useLocalWikiButton.resize(24.5, 24.5)
         if allow_wiki_local_server_Bool == False:
-            self.useLocalWikiButton.setText('Disabled')
+            # self.useLocalWikiButton.setText('Disabled')
+            self.useLocalWikiButton.setIcon(QIcon("./Resources/image/feature_off_icon.png"))
             self.useLocalWikiButton.setStyleSheet(
                 """QPushButton {background-color: rgb(0, 0, 0);
                color: red;
                border: false;}"""
             )
         elif allow_wiki_local_server_Bool == True:
-            self.useLocalWikiButton.setText('Enabled')
+            # self.useLocalWikiButton.setText('Enabled')
+            self.useLocalWikiButton.setIcon(QIcon("./Resources/image/feature_on_icon.png"))
             self.useLocalWikiButton.setStyleSheet(
                 """QPushButton {background-color: rgb(0, 0, 0);
                color: green;
@@ -1752,8 +1782,8 @@ class App(QMainWindow):
 
         # Wiki Server IP Button
         self.wikiServerIPButton = QPushButton(self)
-        self.wikiServerIPButton.move(580, 283)
-        self.wikiServerIPButton.resize(75, 20)
+        self.wikiServerIPButton.move(54, 240.5)
+        self.wikiServerIPButton.resize(55, 24.5)
         self.wikiServerIPButton.setText('Wiki Server')
         self.wikiServerIPButton.clicked.connect(self.wikiServerIPFunction)
         self.wikiServerIPButton.setStyleSheet(
@@ -1763,8 +1793,8 @@ class App(QMainWindow):
         )
         # Wiki Server IP Edit
         self.wikiServerIPEdit = QLineEdit(self)
-        self.wikiServerIPEdit.move(645, 283)
-        self.wikiServerIPEdit.resize(110, 20)
+        self.wikiServerIPEdit.move(189, 240.5)
+        self.wikiServerIPEdit.resize(100, 24.5)
         self.wikiServerIPEdit.setReadOnly(True)
         self.wikiServerIPEdit.setText(wiki_local_server_ip_configuration)  # .replace('SYMBIOT_SERVER: ', ''))
         self.wikiServerIPEdit.returnPressed.connect(self.writeWikiServerFunction)
@@ -1777,8 +1807,8 @@ class App(QMainWindow):
         )
         # Wiki Server Port Button
         self.wikiServerPortButton = QPushButton(self)
-        self.wikiServerPortButton.move(580, 298)
-        self.wikiServerPortButton.resize(100, 20)
+        self.wikiServerPortButton.move(54, 265)
+        self.wikiServerPortButton.resize(80, 24.5)
         self.wikiServerPortButton.setText('Wiki Server Port')
         self.wikiServerPortButton.clicked.connect(self.wikiServerPortFunction)
         self.wikiServerPortButton.setStyleSheet(
@@ -1788,8 +1818,8 @@ class App(QMainWindow):
         )
         # Wiki Server Port Edit
         self.wikiServerPortEdit = QLineEdit(self)
-        self.wikiServerPortEdit.move(695, 298)
-        self.wikiServerPortEdit.resize(55, 20)
+        self.wikiServerPortEdit.move(189, 265)
+        self.wikiServerPortEdit.resize(100, 24.5)
         self.wikiServerPortEdit.setReadOnly(True)
         self.wikiServerPortEdit.setText(wiki_local_server_port_configuration)  # .replace('SYMBIOT_SERVER: ', ''))
         self.wikiServerPortEdit.returnPressed.connect(self.writeWikiServerPortFunction)
@@ -1801,20 +1831,22 @@ class App(QMainWindow):
             color: grey;}"""
         )
 
+        # cycle settings menu pages
+
         # Symbiot Settings
         self.symbiotTitle = QLabel(self)
-        self.symbiotTitle.move(74, 263)
-        self.symbiotTitle.resize(100, 20)
-        self.symbiotTitle.setText('Symbiot Settings')
+        self.symbiotTitle.move(54, 263)
+        self.symbiotTitle.resize(100, 26)
+        self.symbiotTitle.setText('Symbiot Settings:')
         self.symbiotTitle.setStyleSheet(
             """QLabel {
-           color: yellow;
+           color: green;
            border: false;}"""
         )
         # Symbiot Server IP Button
         self.symbiotServerIPButton = QPushButton(self)
-        self.symbiotServerIPButton.move(74, 283)
-        self.symbiotServerIPButton.resize(80, 20)
+        self.symbiotServerIPButton.move(54, 283)
+        self.symbiotServerIPButton.resize(45, 24.5)
         self.symbiotServerIPButton.setText('Server IP')
         self.symbiotServerIPButton.clicked.connect(self.symbiotServerIPFunction)
         self.symbiotServerIPButton.setStyleSheet(
@@ -1824,8 +1856,8 @@ class App(QMainWindow):
         )
         # Symbiot Server IP Edit
         self.symbiotServerIPEdit = QLineEdit(self)
-        self.symbiotServerIPEdit.move(144, 283)
-        self.symbiotServerIPEdit.resize(120, 20)
+        self.symbiotServerIPEdit.move(130, 283)
+        self.symbiotServerIPEdit.resize(120, 24.5)
         self.symbiotServerIPEdit.setReadOnly(True)
         self.symbiotServerIPEdit.setText(symbiot_server_ip_configuration)  # .replace('SYMBIOT_SERVER: ', ''))
         self.symbiotServerIPEdit.returnPressed.connect(self.writeSymbiotServerIPFunction)
@@ -1838,8 +1870,8 @@ class App(QMainWindow):
         )
         # Symbiot Server Port Button
         self.symbiotServerPortButton = QPushButton(self)
-        self.symbiotServerPortButton.move(74, 298)
-        self.symbiotServerPortButton.resize(80, 20)
+        self.symbiotServerPortButton.move(54, 307.5)
+        self.symbiotServerPortButton.resize(55, 24.5)
         self.symbiotServerPortButton.setText('Server Port')
         self.symbiotServerPortButton.clicked.connect(self.symbiotServerPortFunction)
         self.symbiotServerPortButton.setStyleSheet(
@@ -1849,8 +1881,8 @@ class App(QMainWindow):
         )
         # Symbiot Server Port Edit
         self.symbiotServerPortEdit = QLineEdit(self)
-        self.symbiotServerPortEdit.move(144, 298)
-        self.symbiotServerPortEdit.resize(120, 20)
+        self.symbiotServerPortEdit.move(130, 307.5)
+        self.symbiotServerPortEdit.resize(120, 24.5)
         self.symbiotServerPortEdit.setReadOnly(True)
         self.symbiotServerPortEdit.setText(symbiot_server_port_configuration)  # .replace('SYMBIOT_SERVER_PORT: ', ''))
         self.symbiotServerPortEdit.returnPressed.connect(self.writeSymbiotServerPortFunction)
@@ -1863,8 +1895,8 @@ class App(QMainWindow):
         )
         # Symbiot IP Button
         self.symbiotIPButton = QPushButton(self)
-        self.symbiotIPButton.move(74, 313)
-        self.symbiotIPButton.resize(80, 20)
+        self.symbiotIPButton.move(54, 332)
+        self.symbiotIPButton.resize(55, 24.5)
         self.symbiotIPButton.setText('Symbiot IP')
         self.symbiotIPButton.clicked.connect(self.symbiotIPFunction)
         self.symbiotIPButton.setStyleSheet(
@@ -1874,8 +1906,8 @@ class App(QMainWindow):
         )
         # Symbiot IP Edit
         self.symbiotIPEdit = QLineEdit(self)
-        self.symbiotIPEdit.move(144, 313)
-        self.symbiotIPEdit.resize(120, 20)
+        self.symbiotIPEdit.move(130, 332)
+        self.symbiotIPEdit.resize(120, 24.5)
         self.symbiotIPEdit.setReadOnly(True)
         self.symbiotIPEdit.setText(symbiot_ip_configuration)  # .replace('SYMBIOT_IP: ', ''))
         self.symbiotIPEdit.returnPressed.connect(self.writeSymbiotIPFunction)
@@ -1888,8 +1920,8 @@ class App(QMainWindow):
         )
         # Symbiot MAC Button
         self.symbiotMACButton = QPushButton(self)
-        self.symbiotMACButton.move(74, 328)
-        self.symbiotMACButton.resize(80, 20)
+        self.symbiotMACButton.move(54, 356.5)
+        self.symbiotMACButton.resize(65, 24.5)
         self.symbiotMACButton.setText('Symbiot MAC')
         self.symbiotMACButton.clicked.connect(self.symbiotMACFunction)
         self.symbiotMACButton.setStyleSheet(
@@ -1899,8 +1931,8 @@ class App(QMainWindow):
         )
         # Symbiot MAC Edit
         self.symbiotMACEdit = QLineEdit(self)
-        self.symbiotMACEdit.move(144, 328)
-        self.symbiotMACEdit.resize(120, 20)
+        self.symbiotMACEdit.move(130, 356.5)
+        self.symbiotMACEdit.resize(120, 24.5)
         self.symbiotMACEdit.setReadOnly(True)
         self.symbiotMACEdit.setText(symbiot_mac_configuration)  # .replace('SYMBIOT_MAC: ', ''))
         self.symbiotMACEdit.returnPressed.connect(self.writeSymbiotMACFunction)
@@ -1914,9 +1946,10 @@ class App(QMainWindow):
 
         # Index Audio Settings
         self.indexAudioButton = QPushButton(self)
-        self.indexAudioButton.move(74, 168)
-        self.indexAudioButton.resize(45, 20)
-        self.indexAudioButton.setText('Audio')
+        self.indexAudioButton.move(54, 168)
+        self.indexAudioButton.resize(24.5, 24.5)
+        # self.indexAudioButton.setText('Audio')
+        self.indexAudioButton.setIcon(QIcon("./Resources/image/audio_pbutton_icon.png"))
         self.indexAudioButton.clicked.connect(self.indexAudioConfigurationFunction)
         self.indexAudioButton.setStyleSheet(
             """QPushButton {background-color: rgb(0, 0, 0);
@@ -1924,8 +1957,8 @@ class App(QMainWindow):
            border: false;}"""
         )
         self.indexAudioEdit = QLineEdit(self)
-        self.indexAudioEdit.move(119, 168)
-        self.indexAudioEdit.resize(170, 20)
+        self.indexAudioEdit.move(82.5, 168)
+        self.indexAudioEdit.resize(170, 24.5)
         self.indexAudioEdit.setReadOnly(True)
         self.indexAudioEdit.setText(audio_configuration.replace('DIRAUD: ', ''))
         self.indexAudioEdit.returnPressed.connect(self.writeAudioPathFunction)
@@ -1937,29 +1970,33 @@ class App(QMainWindow):
             color: grey;}"""
         )
         self.indexAudioEnableDisableButton = QPushButton(self)
-        self.indexAudioEnableDisableButton.move(289, 168)
-        self.indexAudioEnableDisableButton.resize(45, 20)
-        self.indexAudioEnableDisableButton.setText(audio_active_config)
-        self.indexAudioEnableDisableButton.clicked.connect(configInteractionPermissionFunction)
-        self.indexAudioEnableDisableButton.clicked.connect(self.audioIndexEnableDisableFunction)
+        self.indexAudioEnableDisableButton.move(252.5, 168)
+        self.indexAudioEnableDisableButton.resize(24.5, 24.5)
+        # self.indexAudioEnableDisableButton.setText(audio_active_config)
+        # self.indexAudioEnableDisableButton.setIcon(QIcon("./Resources/image/index_on_icon.png"))
         if audio_active_config_Bool == False:
+            self.indexAudioEnableDisableButton.setIcon(QIcon("./Resources/image/feature_off_icon.png"))
             self.indexAudioEnableDisableButton.setStyleSheet(
                 """QPushButton {background-color: rgb(0, 0, 0);
                color: red;
                border: false;}"""
             )
         elif audio_active_config_Bool == True:
+            self.indexAudioEnableDisableButton.setIcon(QIcon("./Resources/image/feature_on_icon.png"))
             self.indexAudioEnableDisableButton.setStyleSheet(
                 """QPushButton {background-color: rgb(0, 0, 0);
                color: green;
                border: false;}"""
             )
+        self.indexAudioEnableDisableButton.clicked.connect(configInteractionPermissionFunction)
+        self.indexAudioEnableDisableButton.clicked.connect(self.audioIndexEnableDisableFunction)
 
         # Video Index Settings
         self.indexVideoButton = QPushButton(self)
-        self.indexVideoButton.move(74, 183)
-        self.indexVideoButton.resize(45, 20)
-        self.indexVideoButton.setText('Video')
+        self.indexVideoButton.move(54, 192.5)
+        self.indexVideoButton.resize(24.5, 24.5)
+        # self.indexVideoButton.setText('Video')
+        self.indexVideoButton.setIcon(QIcon("./Resources/image/video_pbutton_icon.png"))
         self.indexVideoButton.clicked.connect(self.indexVideoConfigurationFunction)
         self.indexVideoButton.setStyleSheet(
             """QPushButton {background-color: rgb(0, 0, 0);
@@ -1967,8 +2004,8 @@ class App(QMainWindow):
            border: false;}"""
         )
         self.indexVideoEdit = QLineEdit(self)
-        self.indexVideoEdit.move(119, 183)
-        self.indexVideoEdit.resize(170, 20)
+        self.indexVideoEdit.move(82.5, 192.5)
+        self.indexVideoEdit.resize(170, 24.5)
         self.indexVideoEdit.setReadOnly(True)
         self.indexVideoEdit.setText(video_configuration.replace('DIRVID: ', ''))
         self.indexVideoEdit.returnPressed.connect(self.writeVideoPathFunction)
@@ -1980,29 +2017,35 @@ class App(QMainWindow):
             color: grey;}"""
         )
         self.indexVideoEnableDisableButton = QPushButton(self)
-        self.indexVideoEnableDisableButton.move(289, 183)
-        self.indexVideoEnableDisableButton.resize(45, 20)
-        self.indexVideoEnableDisableButton.setText(video_active_config)
-        self.indexVideoEnableDisableButton.clicked.connect(configInteractionPermissionFunction)
-        self.indexVideoEnableDisableButton.clicked.connect(self.videoIndexEnableDisableFunction)
+        self.indexVideoEnableDisableButton.move(252.5, 192.5)
+        self.indexVideoEnableDisableButton.resize(24.5, 24.5)
+        # self.indexVideoEnableDisableButton.setText(video_active_config)
+        # self.indexVideoEnableDisableButton.setIcon(QIcon("./Resources/image/index_on_icon.png"))
+        # self.indexVideoEnableDisableButton.clicked.connect(configInteractionPermissionFunction)
+        # self.indexVideoEnableDisableButton.clicked.connect(self.videoIndexEnableDisableFunction)
         if video_active_config_Bool == False:
+            self.indexVideoEnableDisableButton.setIcon(QIcon("./Resources/image/feature_off_icon.png"))
             self.indexVideoEnableDisableButton.setStyleSheet(
                 """QPushButton {background-color: rgb(0, 0, 0);
                color: red;
                border: false;}"""
             )
         elif video_active_config_Bool == True:
+            self.indexVideoEnableDisableButton.setIcon(QIcon("./Resources/image/feature_on_icon.png"))
             self.indexVideoEnableDisableButton.setStyleSheet(
                 """QPushButton {background-color: rgb(0, 0, 0);
                color: green;
                border: false;}"""
             )
+        self.indexVideoEnableDisableButton.clicked.connect(configInteractionPermissionFunction)
+        self.indexVideoEnableDisableButton.clicked.connect(self.videoIndexEnableDisableFunction)
 
         # Images Index Settings
         self.indexImagesButton = QPushButton(self)
-        self.indexImagesButton.move(74, 198)
-        self.indexImagesButton.resize(45, 20)
-        self.indexImagesButton.setText('  Images')
+        self.indexImagesButton.move(54, 217)
+        self.indexImagesButton.resize(24.5, 24.5)
+        # self.indexImagesButton.setText('  Images')
+        self.indexImagesButton.setIcon(QIcon("./Resources/image/image_pbutton_icon.png"))
         self.indexImagesButton.clicked.connect(self.indexImagesConfigurationFunction)
         self.indexImagesButton.setStyleSheet(
             """QPushButton {background-color: rgb(0, 0, 0);
@@ -2010,8 +2053,8 @@ class App(QMainWindow):
            border: false;}"""
         )
         self.indexImagesEdit = QLineEdit(self)
-        self.indexImagesEdit.move(119, 198)
-        self.indexImagesEdit.resize(170, 20)
+        self.indexImagesEdit.move(82.5, 217)
+        self.indexImagesEdit.resize(170, 24.5)
         self.indexImagesEdit.setReadOnly(True)
         self.indexImagesEdit.setText(image_configuration.replace('DIRIMG: ', ''))
         self.indexImagesEdit.returnPressed.connect(self.writeImagesPathFunction)
@@ -2023,29 +2066,33 @@ class App(QMainWindow):
             color: grey;}"""
         )
         self.indexImageEnableDisableButton = QPushButton(self)
-        self.indexImageEnableDisableButton.move(289, 198)
-        self.indexImageEnableDisableButton.resize(45, 20)
-        self.indexImageEnableDisableButton.setText(image_active_config)
-        self.indexImageEnableDisableButton.clicked.connect(configInteractionPermissionFunction)
-        self.indexImageEnableDisableButton.clicked.connect(self.imageIndexEnableDisableFunction)
+        self.indexImageEnableDisableButton.move(252.5, 217)
+        self.indexImageEnableDisableButton.resize(24.5, 24.5)
+        # self.indexImageEnableDisableButton.setText(image_active_config)
+        # self.indexImageEnableDisableButton.setIcon(QIcon("./Resources/image/index_on_icon.png"))
         if image_active_config_Bool == False:
+            self.indexImageEnableDisableButton.setIcon(QIcon("./Resources/image/feature_off_icon.png"))
             self.indexImageEnableDisableButton.setStyleSheet(
                 """QPushButton {background-color: rgb(0, 0, 0);
                color: red;
                border: false;}"""
             )
         elif image_active_config_Bool == True:
+            self.indexImageEnableDisableButton.setIcon(QIcon("./Resources/image/feature_on_icon.png"))
             self.indexImageEnableDisableButton.setStyleSheet(
                 """QPushButton {background-color: rgb(0, 0, 0);
                color: green;
                border: false;}"""
             )
+        self.indexImageEnableDisableButton.clicked.connect(configInteractionPermissionFunction)
+        self.indexImageEnableDisableButton.clicked.connect(self.imageIndexEnableDisableFunction)
 
         # Text Index Settings
         self.indexTextButton = QPushButton(self)
-        self.indexTextButton.move(74, 213)
-        self.indexTextButton.resize(45, 20)
-        self.indexTextButton.setText('Text')
+        self.indexTextButton.move(54, 241.5)
+        self.indexTextButton.resize(24.5, 24.5)
+        # self.indexTextButton.setText('Text')
+        self.indexTextButton.setIcon(QIcon("./Resources/image/text_pbutton_icon.png"))
         self.indexTextButton.clicked.connect(self.indexTextConfigurationFunction)
         self.indexTextButton.setStyleSheet(
             """QPushButton {background-color: rgb(0, 0, 0);
@@ -2053,8 +2100,8 @@ class App(QMainWindow):
            border: false;}"""
         )
         self.indexTextEdit = QLineEdit(self)
-        self.indexTextEdit.move(119, 213)
-        self.indexTextEdit.resize(170, 20)
+        self.indexTextEdit.move(82.5, 241.5)
+        self.indexTextEdit.resize(170, 24.5)
         self.indexTextEdit.setReadOnly(True)
         self.indexTextEdit.setText(text_configuration.replace('DIRTXT: ', ''))
         self.indexTextEdit.returnPressed.connect(self.writeTextPathFunction)
@@ -2066,29 +2113,33 @@ class App(QMainWindow):
             color: grey;}"""
         )
         self.indexTextEnableDisableButton = QPushButton(self)
-        self.indexTextEnableDisableButton.move(289, 213)
-        self.indexTextEnableDisableButton.resize(45, 20)
-        self.indexTextEnableDisableButton.setText(text_active_config)
-        self.indexTextEnableDisableButton.clicked.connect(configInteractionPermissionFunction)
-        self.indexTextEnableDisableButton.clicked.connect(self.textIndexEnableDisableFunction)
+        self.indexTextEnableDisableButton.move(252.5, 241.5)
+        self.indexTextEnableDisableButton.resize(24.5, 24.5)
+        # self.indexTextEnableDisableButton.setText(text_active_config)
+        # self.indexTextEnableDisableButton.setIcon(QIcon("./Resources/image/index_on_icon.png"))
         if text_active_config_Bool == False:
+            self.indexTextEnableDisableButton.setIcon(QIcon("./Resources/image/feature_off_icon.png"))
             self.indexTextEnableDisableButton.setStyleSheet(
                 """QPushButton {background-color: rgb(0, 0, 0);
                color: red;
                border: false;}"""
             )
         elif text_active_config_Bool == True:
+            self.indexTextEnableDisableButton.setIcon(QIcon("./Resources/image/feature_on_icon.png"))
             self.indexTextEnableDisableButton.setStyleSheet(
                 """QPushButton {background-color: rgb(0, 0, 0);
                color: green;
                border: false;}"""
             )
+        self.indexTextEnableDisableButton.clicked.connect(configInteractionPermissionFunction)
+        self.indexTextEnableDisableButton.clicked.connect(self.textIndexEnableDisableFunction)
 
         # Drive1 Index Settings
         self.drive1Button = QPushButton(self)
         self.drive1Button.move(370, 168)
-        self.drive1Button.resize(45, 20)
-        self.drive1Button.setText(' 1')
+        self.drive1Button.resize(24.5, 24.5)
+        # self.drive1Button.setText(' 1')
+        self.drive1Button.setIcon(QIcon("./Resources/image/directory_search_icon.png"))
         self.drive1Button.clicked.connect(self.indexDrive1ConfigurationFunction)
         self.drive1Button.setStyleSheet(
             """QPushButton {background-color: rgb(0, 0, 0);
@@ -2096,8 +2147,8 @@ class App(QMainWindow):
            border: false;}"""
         )
         self.drive1TextEdit = QLineEdit(self)
-        self.drive1TextEdit.move(415, 168)
-        self.drive1TextEdit.resize(100, 20)
+        self.drive1TextEdit.move(394.5, 168)
+        self.drive1TextEdit.resize(100, 24.5)
         self.drive1TextEdit.setReadOnly(True)
         self.drive1TextEdit.setText(drive1_configuration.replace('DRIVE1: ', ''))
         self.drive1TextEdit.returnPressed.connect(self.writeDrive1PathFunction)
@@ -2110,28 +2161,34 @@ class App(QMainWindow):
         )
         self.drive1EnableDisableButton = QPushButton(self)
         self.drive1EnableDisableButton.move(515, 168)
-        self.drive1EnableDisableButton.resize(45, 20)
-        self.drive1EnableDisableButton.setText(drive_1_active_config)
-        self.drive1EnableDisableButton.clicked.connect(configInteractionPermissionFunction)
-        self.drive1EnableDisableButton.clicked.connect(self.drive1EnableDisableFunction)
+        self.drive1EnableDisableButton.resize(24.5, 24.5)
+        # self.drive1EnableDisableButton.setText(drive_1_active_config)
+        # self.drive1EnableDisableButton.setIcon(QIcon("./Resources/image/index_on_icon.png"))
+        # self.drive1EnableDisableButton.clicked.connect(configInteractionPermissionFunction)
+        # self.drive1EnableDisableButton.clicked.connect(self.drive1EnableDisableFunction)
         if drive_1_active_config_Bool == False:
+            self.drive1EnableDisableButton.setIcon(QIcon("./Resources/image/feature_off_icon.png"))
             self.drive1EnableDisableButton.setStyleSheet(
                 """QPushButton {background-color: rgb(0, 0, 0);
                color: red;
                border: false;}"""
             )
         elif drive_1_active_config_Bool == True:
+            self.drive1EnableDisableButton.setIcon(QIcon("./Resources/image/feature_on_icon.png"))
             self.drive1EnableDisableButton.setStyleSheet(
                 """QPushButton {background-color: rgb(0, 0, 0);
                color: green;
                border: false;}"""
             )
+        self.drive1EnableDisableButton.clicked.connect(configInteractionPermissionFunction)
+        self.drive1EnableDisableButton.clicked.connect(self.drive1EnableDisableFunction)
 
         # Drive2 Index Settings
         self.drive2Button = QPushButton(self)
-        self.drive2Button.move(370, 183)
-        self.drive2Button.resize(45, 20)
-        self.drive2Button.setText(' 2')
+        self.drive2Button.move(370, 192.5)
+        self.drive2Button.resize(24.5, 24.5)
+        # self.drive2Button.setText(' 2')
+        self.drive2Button.setIcon(QIcon("./Resources/image/directory_search_icon.png"))
         self. drive2Button.clicked.connect(self.indexDrive2ConfigurationFunction)
         self.drive2Button.setStyleSheet(
             """QPushButton {background-color: rgb(0, 0, 0);
@@ -2139,8 +2196,8 @@ class App(QMainWindow):
            border: false;}"""
         )
         self.drive2TextEdit = QLineEdit(self)
-        self.drive2TextEdit.move(415, 183)
-        self.drive2TextEdit.resize(100, 20)
+        self.drive2TextEdit.move(394.5, 192.5)
+        self.drive2TextEdit.resize(100, 24.5)
         self.drive2TextEdit.setReadOnly(True)
         self.drive2TextEdit.setText(drive2_configuration.replace('DRIVE2: ', ''))
         self.drive2TextEdit.returnPressed.connect(self.writeDrive2PathFunction)
@@ -2152,29 +2209,35 @@ class App(QMainWindow):
             color: grey;}"""
         )
         self.drive2EnableDisableButton = QPushButton(self)
-        self.drive2EnableDisableButton.move(515, 183)
-        self.drive2EnableDisableButton.resize(45, 20)
-        self.drive2EnableDisableButton.setText(drive_2_active_config)
-        self.drive2EnableDisableButton.clicked.connect(configInteractionPermissionFunction)
-        self.drive2EnableDisableButton.clicked.connect(self.drive2EnableDisableFunction)
+        self.drive2EnableDisableButton.move(515, 192.5)
+        self.drive2EnableDisableButton.resize(24.5, 24.5)
+        # self.drive2EnableDisableButton.setText(drive_2_active_config)
+        # self.drive2EnableDisableButton.setIcon(QIcon("./Resources/image/index_on_icon.png"))
+        # self.drive2EnableDisableButton.clicked.connect(configInteractionPermissionFunction)
+        # self.drive2EnableDisableButton.clicked.connect(self.drive2EnableDisableFunction)
         if drive_2_active_config_Bool == False:
+            self.drive2EnableDisableButton.setIcon(QIcon("./Resources/image/feature_off_icon.png"))
             self.drive2EnableDisableButton.setStyleSheet(
                 """QPushButton {background-color: rgb(0, 0, 0);
                color: red;
                border: false;}"""
             )
         elif drive_2_active_config_Bool == True:
+            self.drive2EnableDisableButton.setIcon(QIcon("./Resources/image/feature_on_icon.png"))
             self.drive2EnableDisableButton.setStyleSheet(
                 """QPushButton {background-color: rgb(0, 0, 0);
                color: green;
                border: false;}"""
             )
+        self.drive2EnableDisableButton.clicked.connect(configInteractionPermissionFunction)
+        self.drive2EnableDisableButton.clicked.connect(self.drive2EnableDisableFunction)
 
         # Drive3 Index Settings
         self.drive3Button = QPushButton(self)
-        self.drive3Button.move(370, 198)
-        self.drive3Button.resize(45, 20)
-        self.drive3Button.setText(' 3')
+        self.drive3Button.move(370, 217)
+        self.drive3Button.resize(24.5, 24.5)
+        # self.drive3Button.setText(' 3')
+        self.drive3Button.setIcon(QIcon("./Resources/image/directory_search_icon.png"))
         self.drive3Button.clicked.connect(self.indexDrive3ConfigurationFunction)
         self.drive3Button.setStyleSheet(
             """QPushButton {background-color: rgb(0, 0, 0);
@@ -2182,8 +2245,8 @@ class App(QMainWindow):
            border: false;}"""
         )
         self.drive3TextEdit = QLineEdit(self)
-        self.drive3TextEdit.move(415, 198)
-        self.drive3TextEdit.resize(100, 20)
+        self.drive3TextEdit.move(394.5, 217)
+        self.drive3TextEdit.resize(100, 24.5)
         self.drive3TextEdit.setReadOnly(True)
         self.drive3TextEdit.setText(drive3_configuration.replace('DRIVE3: ', ''))
         self.drive3TextEdit.returnPressed.connect(self.writeDrive3PathFunction)
@@ -2195,29 +2258,33 @@ class App(QMainWindow):
             color: grey;}"""
         )
         self.drive3EnableDisableButton = QPushButton(self)
-        self.drive3EnableDisableButton.move(515, 198)
-        self.drive3EnableDisableButton.resize(45, 20)
-        self.drive3EnableDisableButton.setText(drive_3_active_config)
-        self.drive3EnableDisableButton.clicked.connect(configInteractionPermissionFunction)
-        self.drive3EnableDisableButton.clicked.connect(self.drive3EnableDisableFunction)
+        self.drive3EnableDisableButton.move(515, 217)
+        self.drive3EnableDisableButton.resize(24.5, 24.5)
+        # self.drive3EnableDisableButton.setText(drive_3_active_config)
+        # self.drive1EnableDisableButton.setIcon(QIcon("./Resources/image/feature_on_icon.png"))
         if drive_3_active_config_Bool == False:
+            self.drive3EnableDisableButton.setIcon(QIcon("./Resources/image/feature_off_icon.png"))
             self.drive3EnableDisableButton.setStyleSheet(
                 """QPushButton {background-color: rgb(0, 0, 0);
                color: red;
                border: false;}"""
             )
         elif drive_3_active_config_Bool == True:
+            self.drive3EnableDisableButton.setIcon(QIcon("./Resources/image/feature_on_icon.png"))
             self.drive3EnableDisableButton.setStyleSheet(
                 """QPushButton {background-color: rgb(0, 0, 0);
                color: green;
                border: false;}"""
             )
+        self.drive3EnableDisableButton.clicked.connect(configInteractionPermissionFunction)
+        self.drive3EnableDisableButton.clicked.connect(self.drive3EnableDisableFunction)
 
         # Drive4 Indexing Settings
         self.drive4Button = QPushButton(self)
-        self.drive4Button.move(370, 213)
-        self.drive4Button.resize(45, 20)
-        self.drive4Button.setText(' 4')
+        self.drive4Button.move(370, 241.5)
+        self.drive4Button.resize(24.5, 24.5)
+        # self.drive4Button.setText(' 4')
+        self.drive4Button.setIcon(QIcon("./Resources/image/directory_search_icon.png"))
         self.drive4Button.clicked.connect(self.indexDrive4ConfigurationFunction)
         self.drive4Button.setStyleSheet(
             """QPushButton {background-color: rgb(0, 0, 0);
@@ -2225,8 +2292,8 @@ class App(QMainWindow):
            border: false;}"""
         )
         self.drive4TextEdit = QLineEdit(self)
-        self.drive4TextEdit.move(415, 213)
-        self.drive4TextEdit.resize(100, 20)
+        self.drive4TextEdit.move(394.5, 241.5)
+        self.drive4TextEdit.resize(100, 24.5)
         self.drive4TextEdit.setReadOnly(True)
         self.drive4TextEdit.setText(drive4_configuration.replace('DRIVE4: ', ''))
         self.drive4TextEdit.returnPressed.connect(self.writeDrive4PathFunction)
@@ -2238,28 +2305,33 @@ class App(QMainWindow):
             color: grey;}"""
         )
         self.drive4EnableDisableButton = QPushButton(self)
-        self.drive4EnableDisableButton.move(515, 213)
-        self.drive4EnableDisableButton.resize(45, 20)
-        self.drive4EnableDisableButton.setText(drive_4_active_config)
-        self.drive4EnableDisableButton.clicked.connect(configInteractionPermissionFunction)
-        self.drive4EnableDisableButton.clicked.connect(self.drive4EnableDisableFunction)
+        self.drive4EnableDisableButton.move(515, 241.5)
+        self.drive4EnableDisableButton.resize(24.5, 24.5)
+        # self.drive4EnableDisableButton.setText(drive_4_active_config)
+        # self.drive4EnableDisableButton.setIcon(QIcon("./Resources/image/index_on_icon.png"))
         if drive_4_active_config_Bool == False:
+            self.drive4EnableDisableButton.setIcon(QIcon("./Resources/image/feature_off_icon.png"))
             self.drive4EnableDisableButton.setStyleSheet(
                 """QPushButton {background-color: rgb(0, 0, 0);
                color: red;
                border: false;}"""
             )
         elif drive_4_active_config_Bool == True:
+            self.drive4EnableDisableButton.setIcon(QIcon("./Resources/image/feature_on_icon.png"))
             self.drive4EnableDisableButton.setStyleSheet(
                 """QPushButton {background-color: rgb(0, 0, 0);
                color: green;
                border: false;}"""
             )
+        self.drive4EnableDisableButton.clicked.connect(configInteractionPermissionFunction)
+        self.drive4EnableDisableButton.clicked.connect(self.drive4EnableDisableFunction)
+
         # Drive5 Index Settings
         self.drive5Button = QPushButton(self)
         self.drive5Button.move(565, 168)
-        self.drive5Button.resize(45, 20)
-        self.drive5Button.setText(' 5')
+        self.drive5Button.resize(24.5, 24.5)
+        # self.drive5Button.setText(' 5')
+        self.drive5Button.setIcon(QIcon("./Resources/image/directory_search_icon.png"))
         self.drive5Button.clicked.connect(self.indexDrive5ConfigurationFunction)
         self.drive5Button.setStyleSheet(
             """QPushButton {background-color: rgb(0, 0, 0);
@@ -2268,7 +2340,7 @@ class App(QMainWindow):
         )
         self.drive5TextEdit = QLineEdit(self)
         self.drive5TextEdit.move(610, 168)
-        self.drive5TextEdit.resize(100, 20)
+        self.drive5TextEdit.resize(100, 24.5)
         self.drive5TextEdit.setReadOnly(True)
         self.drive5TextEdit.setText(drive5_configuration.replace('DRIVE5: ', ''))
         self.drive5TextEdit.returnPressed.connect(self.writeDrive5PathFunction)
@@ -2281,28 +2353,32 @@ class App(QMainWindow):
         )
         self.drive5EnableDisableButton = QPushButton(self)
         self.drive5EnableDisableButton.move(710, 168)
-        self.drive5EnableDisableButton.resize(45, 20)
-        self.drive5EnableDisableButton.setText(drive_5_active_config)
-        self.drive5EnableDisableButton.clicked.connect(configInteractionPermissionFunction)
-        self.drive5EnableDisableButton.clicked.connect(self.drive5EnableDisableFunction)
+        self.drive5EnableDisableButton.resize(24.5, 24.5)
+        # self.drive5EnableDisableButton.setText(drive_5_active_config)
+        # self.drive5EnableDisableButton.setIcon(QIcon("./Resources/image/index_on_icon.png"))
         if drive_5_active_config_Bool == False:
+            self.drive5EnableDisableButton.setIcon(QIcon("./Resources/image/feature_off_icon.png"))
             self.drive5EnableDisableButton.setStyleSheet(
                 """QPushButton {background-color: rgb(0, 0, 0);
                color: red;
                border: false;}"""
             )
         elif drive_5_active_config_Bool == True:
+            self.drive5EnableDisableButton.setIcon(QIcon("./Resources/image/feature_on_icon.png"))
             self.drive5EnableDisableButton.setStyleSheet(
                 """QPushButton {background-color: rgb(0, 0, 0);
                color: green;
                border: false;}"""
             )
+        self.drive5EnableDisableButton.clicked.connect(configInteractionPermissionFunction)
+        self.drive5EnableDisableButton.clicked.connect(self.drive5EnableDisableFunction)
 
         # Drive6 Index Settings
         self.drive6Button = QPushButton(self)
-        self.drive6Button.move(565, 183)
-        self.drive6Button.resize(45, 20)
-        self.drive6Button.setText(' 6')
+        self.drive6Button.move(565, 192.5)
+        self.drive6Button.resize(24.5, 24.5)
+        # self.drive6Button.setText(' 6')
+        self.drive6Button.setIcon(QIcon("./Resources/image/directory_search_icon.png"))
         self.drive6Button.clicked.connect(self.indexDrive6ConfigurationFunction)
         self.drive6Button.setStyleSheet(
             """QPushButton {background-color: rgb(0, 0, 0);
@@ -2310,8 +2386,8 @@ class App(QMainWindow):
            border: false;}"""
         )
         self.drive6TextEdit = QLineEdit(self)
-        self.drive6TextEdit.move(610, 183)
-        self.drive6TextEdit.resize(100, 20)
+        self.drive6TextEdit.move(610, 192.5)
+        self.drive6TextEdit.resize(100, 24.5)
         self.drive6TextEdit.setReadOnly(True)
         self.drive6TextEdit.setText(drive6_configuration.replace('DRIVE6: ', ''))
         self.drive6TextEdit.returnPressed.connect(self.writeDrive6PathFunction)
@@ -2323,29 +2399,33 @@ class App(QMainWindow):
             color: grey;}"""
         )
         self.drive6EnableDisableButton = QPushButton(self)
-        self.drive6EnableDisableButton.move(710, 183)
-        self.drive6EnableDisableButton.resize(45, 20)
-        self.drive6EnableDisableButton.setText(drive_6_active_config)
-        self.drive6EnableDisableButton.clicked.connect(configInteractionPermissionFunction)
-        self.drive6EnableDisableButton.clicked.connect(self.drive6EnableDisableFunction)
+        self.drive6EnableDisableButton.move(710, 192.5)
+        self.drive6EnableDisableButton.resize(24.5, 24.5)
+        # self.drive6EnableDisableButton.setText(drive_6_active_config)
+        # self.drive6EnableDisableButton.setIcon(QIcon("./Resources/image/index_on_icon.png"))
         if drive_6_active_config_Bool == False:
+            self.drive6EnableDisableButton.setIcon(QIcon("./Resources/image/feature_off_icon.png"))
             self.drive6EnableDisableButton.setStyleSheet(
                 """QPushButton {background-color: rgb(0, 0, 0);
                color: red;
                border: false;}"""
             )
         elif drive_6_active_config_Bool == True:
+            self.drive6EnableDisableButton.setIcon(QIcon("./Resources/image/feature_on_icon.png"))
             self.drive6EnableDisableButton.setStyleSheet(
                 """QPushButton {background-color: rgb(0, 0, 0);
                color: green;
                border: false;}"""
             )
+        self.drive6EnableDisableButton.clicked.connect(configInteractionPermissionFunction)
+        self.drive6EnableDisableButton.clicked.connect(self.drive6EnableDisableFunction)
 
         # Drive7 Index Settings
         self.drive7Button = QPushButton(self)
-        self.drive7Button.move(565, 198)
-        self.drive7Button.resize(45, 20)
-        self.drive7Button.setText(' 7')
+        self.drive7Button.move(565, 217)
+        self.drive7Button.resize(24.5, 24.5)
+        # self.drive7Button.setText(' 7')
+        self.drive7Button.setIcon(QIcon("./Resources/image/directory_search_icon.png"))
         self.drive7Button.clicked.connect(self.indexDrive7ConfigurationFunction)
         self.drive7Button.setStyleSheet(
             """QPushButton {background-color: rgb(0, 0, 0);
@@ -2353,8 +2433,8 @@ class App(QMainWindow):
            border: false;}"""
         )
         self.drive7TextEdit = QLineEdit(self)
-        self.drive7TextEdit.move(610, 198)
-        self.drive7TextEdit.resize(100, 20)
+        self.drive7TextEdit.move(610, 217)
+        self.drive7TextEdit.resize(100, 24.5)
         self.drive7TextEdit.setReadOnly(True)
         self.drive7TextEdit.setText(drive7_configuration.replace('DRIVE7: ', ''))
         self.drive7TextEdit.returnPressed.connect(self.writeDrive7PathFunction)
@@ -2366,29 +2446,33 @@ class App(QMainWindow):
             color: grey;}"""
         )
         self.drive7EnableDisableButton = QPushButton(self)
-        self.drive7EnableDisableButton.move(710, 198)
-        self.drive7EnableDisableButton.resize(45, 20)
-        self.drive7EnableDisableButton.setText(drive_7_active_config)
-        self.drive7EnableDisableButton.clicked.connect(configInteractionPermissionFunction)
-        self.drive7EnableDisableButton.clicked.connect(self.drive7EnableDisableFunction)
+        self.drive7EnableDisableButton.move(710, 217)
+        self.drive7EnableDisableButton.resize(24.5, 24.5)
+        # self.drive7EnableDisableButton.setText(drive_7_active_config)
+        # self.drive7EnableDisableButton.setIcon(QIcon("./Resources/image/index_on_icon.png"))
         if drive_7_active_config_Bool == False:
+            self.drive7EnableDisableButton.setIcon(QIcon("./Resources/image/feature_off_icon.png"))
             self.drive7EnableDisableButton.setStyleSheet(
                 """QPushButton {background-color: rgb(0, 0, 0);
                color: red;
                border: false;}"""
             )
         elif drive_7_active_config_Bool == True:
+            self.drive7EnableDisableButton.setIcon(QIcon("./Resources/image/feature_on_icon.png"))
             self.drive7EnableDisableButton.setStyleSheet(
                 """QPushButton {background-color: rgb(0, 0, 0);
                color: green;
                border: false;}"""
             )
+        self.drive7EnableDisableButton.clicked.connect(configInteractionPermissionFunction)
+        self.drive7EnableDisableButton.clicked.connect(self.drive7EnableDisableFunction)
 
         # Drive8 Indexing Settings
         self.drive8Button = QPushButton(self)
-        self.drive8Button.move(565, 213)
-        self.drive8Button.resize(45, 20)
-        self.drive8Button.setText(' 8')
+        self.drive8Button.move(565, 241.5)
+        self.drive8Button.resize(24.5, 24.5)
+        # self.drive8Button.setText(' 8')
+        self.drive8Button.setIcon(QIcon("./Resources/image/directory_search_icon.png"))
         self.drive8Button.clicked.connect(self.indexDrive8ConfigurationFunction)
         self.drive8Button.setStyleSheet(
             """QPushButton {background-color: rgb(0, 0, 0);
@@ -2396,8 +2480,8 @@ class App(QMainWindow):
            border: false;}"""
         )
         self.drive8TextEdit = QLineEdit(self)
-        self.drive8TextEdit.move(610, 213)
-        self.drive8TextEdit.resize(100, 20)
+        self.drive8TextEdit.move(610, 241.5)
+        self.drive8TextEdit.resize(100, 24.5)
         self.drive8TextEdit.setReadOnly(True)
         self.drive8TextEdit.setText(drive8_configuration.replace('DRIVE8: ', ''))
         self.drive8TextEdit.returnPressed.connect(self.writeDrive8PathFunction)
@@ -2409,23 +2493,26 @@ class App(QMainWindow):
             color: grey;}"""
         )
         self.drive8EnableDisableButton = QPushButton(self)
-        self.drive8EnableDisableButton.move(710, 213)
-        self.drive8EnableDisableButton.resize(45, 20)
-        self.drive8EnableDisableButton.setText(drive_8_active_config)
-        self.drive8EnableDisableButton.clicked.connect(configInteractionPermissionFunction)
-        self.drive8EnableDisableButton.clicked.connect(self.drive8EnableDisableFunction)
+        self.drive8EnableDisableButton.move(710, 241.5)
+        self.drive8EnableDisableButton.resize(24.5, 24.5)
+        # self.drive8EnableDisableButton.setText(drive_8_active_config)
+        self.drive8EnableDisableButton.setIcon(QIcon("./Resources/image/index_on_icon.png"))
         if drive_8_active_config_Bool == False:
+            self.drive8EnableDisableButton.setIcon(QIcon("./Resources/image/feature_off_icon.png"))
             self.drive8EnableDisableButton.setStyleSheet(
                 """QPushButton {background-color: rgb(0, 0, 0);
                color: red;
                border: false;}"""
             )
         elif drive_8_active_config_Bool == True:
+            self.drive8EnableDisableButton.setIcon(QIcon("./Resources/image/feature_on_icon.png"))
             self.drive8EnableDisableButton.setStyleSheet(
                 """QPushButton {background-color: rgb(0, 0, 0);
                color: green;
                border: false;}"""
             )
+        self.drive8EnableDisableButton.clicked.connect(configInteractionPermissionFunction)
+        self.drive8EnableDisableButton.clicked.connect(self.drive8EnableDisableFunction)
 
         # self.settingsTitle.hide()
         self.indexTitle.hide()
@@ -2574,7 +2661,8 @@ class App(QMainWindow):
                     fo.close()
                 audio_active_config_Bool = True
                 audioIndexEngineFunction()
-                self.indexAudioEnableDisableButton.setText('Enabled')
+                # self.indexAudioEnableDisableButton.setText('Enabled')
+                self.indexAudioEnableDisableButton.setIcon(QIcon("./Resources/image/feature_on_icon.png"))
                 self.indexAudioEnableDisableButton.setStyleSheet(
                     """QPushButton {background-color: rgb(0, 0, 0);
                    color: green;
@@ -2603,7 +2691,8 @@ class App(QMainWindow):
                     fo.close()
                 audio_active_config_Bool = False
                 audio_index_psutil.kill()
-                self.indexAudioEnableDisableButton.setText('Disabled')
+                # self.indexAudioEnableDisableButton.setText('Disabled')
+                self.indexAudioEnableDisableButton.setIcon(QIcon("./Resources/image/feature_off_icon.png"))
                 self.indexAudioEnableDisableButton.setStyleSheet(
                     """QPushButton {background-color: rgb(0, 0, 0);
                    color: red;
@@ -2638,7 +2727,8 @@ class App(QMainWindow):
                     fo.close()
                 video_active_config_Bool = True
                 videoIndexEngineFunction()
-                self.indexVideoEnableDisableButton.setText('Enabled')
+                # self.indexVideoEnableDisableButton.setText('Enabled')
+                self.indexVideoEnableDisableButton.setIcon(QIcon("./Resources/image/feature_on_icon.png"))
                 self.indexVideoEnableDisableButton.setStyleSheet(
                     """QPushButton {background-color: rgb(0, 0, 0);
                    color: green;
@@ -2667,7 +2757,8 @@ class App(QMainWindow):
                     fo.close()
                 video_active_config_Bool = False
                 video_index_psutil.kill()
-                self.indexVideoEnableDisableButton.setText('Disabled')
+                # self.indexVideoEnableDisableButton.setText('Disabled')
+                self.indexVideoEnableDisableButton.setIcon(QIcon("./Resources/image/feature_off_icon.png"))
                 self.indexVideoEnableDisableButton.setStyleSheet(
                     """QPushButton {background-color: rgb(0, 0, 0);
                    color: red;
@@ -2702,7 +2793,8 @@ class App(QMainWindow):
                     fo.close()
                 image_active_config_Bool = True
                 imageIndexEngineFunction()
-                self.indexImageEnableDisableButton.setText('Enabled')
+                # self.indexImageEnableDisableButton.setText('Enabled')
+                self.indexImageEnableDisableButton.setIcon(QIcon("./Resources/image/feature_on_icon.png"))
                 self.indexImageEnableDisableButton.setStyleSheet(
                     """QPushButton {background-color: rgb(0, 0, 0);
                    color: green;
@@ -2731,7 +2823,8 @@ class App(QMainWindow):
                     fo.close()
                 image_active_config_Bool = False
                 image_index_psutil.kill()
-                self.indexImageEnableDisableButton.setText('Disabled')
+                # self.indexImageEnableDisableButton.setText('Disabled')
+                self.indexImageEnableDisableButton.setIcon(QIcon("./Resources/image/feature_off_icon.png"))
                 self.indexImageEnableDisableButton.setStyleSheet(
                     """QPushButton {background-color: rgb(0, 0, 0);
                    color: red;
@@ -2766,7 +2859,8 @@ class App(QMainWindow):
                     fo.close()
                 text_active_config_Bool = True
                 textIndexEngineFunction()
-                self.indexTextEnableDisableButton.setText('Enabled')
+                # self.indexTextEnableDisableButton.setText('Enabled')
+                self.indexTextEnableDisableButton.setIcon(QIcon("./Resources/image/feature_on_icon.png"))
                 self.indexTextEnableDisableButton.setStyleSheet(
                     """QPushButton {background-color: rgb(0, 0, 0);
                    color: green;
@@ -2795,7 +2889,8 @@ class App(QMainWindow):
                     fo.close()
                 text_active_config_Bool = False
                 text_index_psutil.kill()
-                self.indexTextEnableDisableButton.setText('Disabled')
+                # elf.indexTextEnableDisableButton.setText('Disabled')
+                self.indexTextEnableDisableButton.setIcon(QIcon("./Resources/image/feature_off_icon.png"))
                 self.indexTextEnableDisableButton.setStyleSheet(
                     """QPushButton {background-color: rgb(0, 0, 0);
                    color: red;
@@ -2830,7 +2925,8 @@ class App(QMainWindow):
                     fo.close()
                 drive_1_active_config_Bool = True
                 drive1IndexEngineFunction()
-                self.drive1EnableDisableButton.setText('Enabled')
+                # self.drive1EnableDisableButton.setText('Enabled')
+                self.drive1EnableDisableButton.setIcon(QIcon("./Resources/image/feature_on_icon.png"))
                 self.drive1EnableDisableButton.setStyleSheet(
                     """QPushButton {background-color: rgb(0, 0, 0);
                    color: green;
@@ -2859,7 +2955,8 @@ class App(QMainWindow):
                     fo.close()
                 drive_1_active_config_Bool = False
                 drive1_index_psutil.kill()
-                self.drive1EnableDisableButton.setText('Disabled')
+                # self.drive1EnableDisableButton.setText('Disabled')
+                self.drive1EnableDisableButton.setIcon(QIcon("./Resources/image/feature_off_icon.png"))
                 self.drive1EnableDisableButton.setStyleSheet(
                     """QPushButton {background-color: rgb(0, 0, 0);
                    color: red;
@@ -2894,7 +2991,8 @@ class App(QMainWindow):
                     fo.close()
                 drive_2_active_config_Bool = True
                 drive2IndexEngineFunction()
-                self.drive2EnableDisableButton.setText('Enabled')
+                # self.drive2EnableDisableButton.setText('Enabled')
+                self.drive2EnableDisableButton.setIcon(QIcon("./Resources/image/feature_on_icon.png"))
                 self.drive2EnableDisableButton.setStyleSheet(
                     """QPushButton {background-color: rgb(0, 0, 0);
                    color: green;
@@ -2923,7 +3021,8 @@ class App(QMainWindow):
                     fo.close()
                 drive_2_active_config_Bool = False
                 drive2_index_psutil.kill()
-                self.drive2EnableDisableButton.setText('Disabled')
+                # self.drive2EnableDisableButton.setText('Disabled')
+                self.drive2EnableDisableButton.setIcon(QIcon("./Resources/image/feature_off_icon.png"))
                 self.drive2EnableDisableButton.setStyleSheet(
                     """QPushButton {background-color: rgb(0, 0, 0);
                    color: red;
@@ -2958,7 +3057,8 @@ class App(QMainWindow):
                     fo.close()
                 drive_3_active_config_Bool = True
                 drive3IndexEngineFunction()
-                self.drive3EnableDisableButton.setText('Enabled')
+                # self.drive3EnableDisableButton.setText('Enabled')
+                self.drive3EnableDisableButton.setIcon(QIcon("./Resources/image/feature_on_icon.png"))
                 self.drive3EnableDisableButton.setStyleSheet(
                     """QPushButton {background-color: rgb(0, 0, 0);
                    color: green;
@@ -2987,7 +3087,8 @@ class App(QMainWindow):
                     fo.close()
                 drive_3_active_config_Bool = False
                 drive3_index_psutil.kill()
-                self.drive3EnableDisableButton.setText('Disabled')
+                # self.drive3EnableDisableButton.setText('Disabled')
+                self.drive3EnableDisableButton.setIcon(QIcon("./Resources/image/feature_off_icon.png"))
                 self.drive3EnableDisableButton.setStyleSheet(
                     """QPushButton {background-color: rgb(0, 0, 0);
                    color: red;
@@ -3022,7 +3123,8 @@ class App(QMainWindow):
                     fo.close()
                 drive_4_active_config_Bool = True
                 drive4IndexEngineFunction()
-                self.drive4EnableDisableButton.setText('Enabled')
+                # self.drive4EnableDisableButton.setText('Enabled')
+                self.drive4EnableDisableButton.setIcon(QIcon("./Resources/image/feature_on_icon.png"))
                 self.drive4EnableDisableButton.setStyleSheet(
                     """QPushButton {background-color: rgb(0, 0, 0);
                    color: green;
@@ -3051,7 +3153,8 @@ class App(QMainWindow):
                     fo.close()
                 drive_4_active_config_Bool = False
                 drive4_index_psutil.kill()
-                self.drive4EnableDisableButton.setText('Disabled')
+                # self.drive4EnableDisableButton.setText('Disabled')
+                self.drive4EnableDisableButton.setIcon(QIcon("./Resources/image/feature_off_icon.png"))
                 self.drive4EnableDisableButton.setStyleSheet(
                     """QPushButton {background-color: rgb(0, 0, 0);
                    color: red;
@@ -3086,7 +3189,8 @@ class App(QMainWindow):
                     fo.close()
                 drive_5_active_config_Bool = True
                 drive5IndexEngineFunction()
-                self.drive5EnableDisableButton.setText('Enabled')
+                # self.drive5EnableDisableButton.setText('Enabled')
+                self.drive5EnableDisableButton.setIcon(QIcon("./Resources/image/feature_on_icon.png"))
                 self.drive5EnableDisableButton.setStyleSheet(
                     """QPushButton {background-color: rgb(0, 0, 0);
                    color: green;
@@ -3115,7 +3219,8 @@ class App(QMainWindow):
                     fo.close()
                 drive_5_active_config_Bool = False
                 drive5_index_psutil.kill()
-                self.drive5EnableDisableButton.setText('Disabled')
+                # self.drive5EnableDisableButton.setText('Disabled')
+                self.drive5EnableDisableButton.setIcon(QIcon("./Resources/image/feature_off_icon.png"))
                 self.drive5EnableDisableButton.setStyleSheet(
                     """QPushButton {background-color: rgb(0, 0, 0);
                    color: red;
@@ -3150,7 +3255,8 @@ class App(QMainWindow):
                     fo.close()
                 drive_6_active_config_Bool = True
                 drive6IndexEngineFunction()
-                self.drive6EnableDisableButton.setText('Enabled')
+                # self.drive6EnableDisableButton.setText('Enabled')
+                self.drive6EnableDisableButton.setIcon(QIcon("./Resources/image/feature_on_icon.png"))
                 self.drive6EnableDisableButton.setStyleSheet(
                     """QPushButton {background-color: rgb(0, 0, 0);
                    color: green;
@@ -3179,7 +3285,8 @@ class App(QMainWindow):
                     fo.close()
                 drive_6_active_config_Bool = False
                 drive6_index_psutil.kill()
-                self.drive6EnableDisableButton.setText('Disabled')
+                # self.drive6EnableDisableButton.setText('Disabled')
+                self.drive6EnableDisableButton.setIcon(QIcon("./Resources/image/feature_off_icon.png"))
                 self.drive6EnableDisableButton.setStyleSheet(
                     """QPushButton {background-color: rgb(0, 0, 0);
                    color: red;
@@ -3214,7 +3321,8 @@ class App(QMainWindow):
                     fo.close()
                 drive_7_active_config_Bool = True
                 drive7IndexEngineFunction()
-                self.drive7EnableDisableButton.setText('Enabled')
+                # self.drive7EnableDisableButton.setText('Enabled')
+                self.drive7EnableDisableButton.setIcon(QIcon("./Resources/image/feature_on_icon.png"))
                 self.drive7EnableDisableButton.setStyleSheet(
                     """QPushButton {background-color: rgb(0, 0, 0);
                    color: green;
@@ -3243,7 +3351,8 @@ class App(QMainWindow):
                     fo.close()
                 drive_7_active_config_Bool = False
                 drive7_index_psutil.kill()
-                self.drive7EnableDisableButton.setText('Disabled')
+                # self.drive7EnableDisableButton.setText('Disabled')
+                self.drive7EnableDisableButton.setIcon(QIcon("./Resources/image/feature_off_icon.png"))
                 self.drive7EnableDisableButton.setStyleSheet(
                     """QPushButton {background-color: rgb(0, 0, 0);
                    color: red;
@@ -3278,7 +3387,8 @@ class App(QMainWindow):
                     fo.close()
                 drive_8_active_config_Bool = True
                 drive8IndexEngineFunction()
-                self.drive8EnableDisableButton.setText('Enabled')
+                # self.drive8EnableDisableButton.setText('Enabled')
+                self.drive8EnableDisableButton.setIcon(QIcon("./Resources/image/feature_on_icon.png"))
                 self.drive8EnableDisableButton.setStyleSheet(
                     """QPushButton {background-color: rgb(0, 0, 0);
                    color: green;
@@ -3307,12 +3417,200 @@ class App(QMainWindow):
                     fo.close()
                 drive_8_active_config_Bool = False
                 drive8_index_psutil.kill()
-                self.drive8EnableDisableButton.setText('Disabled')
+                # self.drive8EnableDisableButton.setText('Disabled')
+                self.drive8EnableDisableButton.setIcon(QIcon("./Resources/image/feature_off_icon.png"))
                 self.drive8EnableDisableButton.setStyleSheet(
                     """QPushButton {background-color: rgb(0, 0, 0);
                    color: red;
                    border: false;}"""
                 )
+    def hideWikiSettings(self):
+        self.wikiSettingsLabel.hide()
+        self.wikiShowBrowserLabel.hide()
+        self.wikiShowBrowserButton.hide()
+        self.dictateWikiLabel.hide()
+        self.dictateWikiButton.hide()
+        self.useLocalWikiLabel.hide()
+        self.useLocalWikiButton.hide()
+        self.wikiServerIPButton.hide()
+        self.wikiServerIPEdit.hide()
+        self.wikiServerPortButton.hide()
+        self.wikiServerPortEdit.hide()
+
+    def showWikiSettings(self):
+        self.wikiSettingsLabel.show()
+        self.wikiShowBrowserLabel.show()
+        self.wikiShowBrowserButton.show()
+        self.dictateWikiLabel.show()
+        self.dictateWikiButton.show()
+        self.useLocalWikiLabel.show()
+        self.useLocalWikiButton.show()
+        self.wikiServerIPButton.show()
+        self.wikiServerIPEdit.show()
+        self.wikiServerPortButton.show()
+        self.wikiServerPortEdit.show()
+
+    def hideSymbiotSettings(self):
+        self.symbiotTitle.hide()
+        self.symbiotServerIPButton.hide()
+        self.symbiotServerIPEdit.hide()
+        self.symbiotServerIPEdit.hide()
+        self.symbiotServerPortButton.hide()
+        self.symbiotServerPortEdit.hide()
+        self.symbiotIPButton.hide()
+        self.symbiotIPEdit.hide()
+        self.symbiotMACButton.hide()
+        self.symbiotMACEdit.hide()
+
+    def showSymbiotSettings(self):
+        self.symbiotTitle.show()
+        self.symbiotServerIPButton.show()
+        self.symbiotServerIPEdit.show()
+        self.symbiotServerIPEdit.show()
+        self.symbiotServerPortButton.show()
+        self.symbiotServerPortEdit.show()
+        self.symbiotIPButton.show()
+        self.symbiotIPEdit.show()
+        self.symbiotMACButton.show()
+        self.symbiotMACEdit.show()
+
+    def hideIndexSettings(self):
+        self.indexTitle.hide()
+        self.indexTitle2.hide()
+        self.indexAudioButton.hide()
+        self.indexAudioEdit.hide()
+        self.indexAudioEnableDisableButton.hide()
+        self.indexVideoButton.hide()
+        self.indexVideoEdit.hide()
+        self.indexVideoEnableDisableButton.hide()
+        self.indexImagesButton.hide()
+        self.indexImagesEdit.hide()
+        self.indexImageEnableDisableButton.hide()
+        self.indexTextButton.hide()
+        self.indexTextEdit.hide()
+        self.indexTextEnableDisableButton.hide()
+        self.drive1Button.hide()
+        self.drive1TextEdit.hide()
+        self.drive1EnableDisableButton.hide()
+        self.drive2Button.hide()
+        self.drive2TextEdit.hide()
+        self.drive2EnableDisableButton.hide()
+        self.drive3Button.hide()
+        self.drive3TextEdit.hide()
+        self.drive3EnableDisableButton.hide()
+        self.drive4Button.hide()
+        self.drive4TextEdit.hide()
+        self.drive4EnableDisableButton.hide()
+        self.drive5Button.hide()
+        self.drive5TextEdit.hide()
+        self.drive5EnableDisableButton.hide()
+        self.drive6Button.hide()
+        self.drive6TextEdit.hide()
+        self.drive6EnableDisableButton.hide()
+        self.drive7Button.hide()
+        self.drive7TextEdit.hide()
+        self.drive7EnableDisableButton.hide()
+        self.drive8Button.hide()
+        self.drive8TextEdit.hide()
+        self.drive8EnableDisableButton.hide()
+
+    def showIndexSettings(self):
+        self.indexTitle.show()
+        self.indexTitle2.show()
+        self.indexAudioButton.show()
+        self.indexAudioEdit.show()
+        self.indexAudioEnableDisableButton.show()
+        self.indexVideoButton.show()
+        self.indexVideoEdit.show()
+        self.indexVideoEnableDisableButton.show()
+        self.indexImagesButton.show()
+        self.indexImagesEdit.show()
+        self.indexImageEnableDisableButton.show()
+        self.indexTextButton.show()
+        self.indexTextEdit.show()
+        self.indexTextEnableDisableButton.show()
+        self.drive1Button.show()
+        self.drive1TextEdit.show()
+        self.drive1EnableDisableButton.show()
+        self.drive2Button.show()
+        self.drive2TextEdit.show()
+        self.drive2EnableDisableButton.show()
+        self.drive3Button.show()
+        self.drive3TextEdit.show()
+        self.drive3EnableDisableButton.show()
+        self.drive4Button.show()
+        self.drive4TextEdit.show()
+        self.drive4EnableDisableButton.show()
+        self.drive5Button.show()
+        self.drive5TextEdit.show()
+        self.drive5EnableDisableButton.show()
+        self.drive6Button.show()
+        self.drive6TextEdit.show()
+        self.drive6EnableDisableButton.show()
+        self.drive7Button.show()
+        self.drive7TextEdit.show()
+        self.drive7EnableDisableButton.show()
+        self.drive8Button.show()
+        self.drive8TextEdit.show()
+        self.drive8EnableDisableButton.show()
+
+
+    def cycleSettingsMenuLeftFunction(self):
+        global menu_page
+
+        if menu_page == 0:
+            print('-- settings menu page left')
+            menu_page = 2
+
+            self.hideWikiSettings()
+            self.hideSymbiotSettings()
+
+            self.showIndexSettings()
+
+        elif menu_page == 1:
+            print('-- settings menu page left')
+            menu_page -= 1
+
+            self.hideIndexSettings()
+            self.hideWikiSettings()
+
+            self.showSymbiotSettings()
+
+        elif menu_page == 2:
+            print('-- settings menu page left')
+            self.hideSymbiotSettings()
+            self.hideIndexSettings()
+
+            self.showWikiSettings()
+            menu_page -= 1
+
+
+    def cycleSettingsMenuFunction(self):
+        global menu_page
+
+        if menu_page == 0:
+            print('settings menu page right')
+            menu_page += 1
+            self.hideSymbiotSettings()
+            self.hideWikiSettings()
+
+            self.showIndexSettings()
+
+        elif menu_page == 1:
+            print('settings menu page right')
+            menu_page += 1
+            self.hideIndexSettings()
+            self.hideWikiSettings()
+
+            self.showSymbiotSettings()
+
+        elif menu_page == 2:
+            menu_page = 0
+            print('settings menu page right')
+            self.hideIndexSettings()
+            self.hideSymbiotSettings()
+
+            self.showWikiSettings()
 
     def showHideSettingsFunction(self):
         global showHideValue
@@ -3344,27 +3642,6 @@ class App(QMainWindow):
             # self.settings_menu_title.show()
             self.indexTitle.show()
             self.indexTitle2.show()
-            self.wikiSettingsLabel.show()
-            self.wikiShowBrowserLabel.show()
-            self.wikiShowBrowserButton.show()
-            self.dictateWikiLabel.show()
-            self.dictateWikiButton.show()
-            self.useLocalWikiLabel.show()
-            self.useLocalWikiButton.show()
-            self.wikiServerIPButton.show()
-            self.wikiServerIPEdit.show()
-            self.wikiServerPortButton.show()
-            self.wikiServerPortEdit.show()
-            self.symbiotTitle.show()
-            self.symbiotServerIPButton.show()
-            self.symbiotServerIPEdit.show()
-            self.symbiotServerIPEdit.show()
-            self.symbiotServerPortButton.show()
-            self.symbiotServerPortEdit.show()
-            self.symbiotIPButton.show()
-            self.symbiotIPEdit.show()
-            self.symbiotMACButton.show()
-            self.symbiotMACEdit.show()
             self.indexAudioButton.show()
             self.indexAudioEdit.show()
             self.indexAudioEnableDisableButton.show()
@@ -3425,27 +3702,7 @@ class App(QMainWindow):
             self.settings_menu_title.hide()
             self.indexTitle.hide()
             self.indexTitle2.hide()
-            self.wikiSettingsLabel.hide()
-            self.wikiShowBrowserLabel.hide()
-            self.wikiShowBrowserButton.hide()
-            self.dictateWikiLabel.hide()
-            self.dictateWikiButton.hide()
-            self.useLocalWikiLabel.hide()
-            self.useLocalWikiButton.hide()
-            self.wikiServerIPButton.hide()
-            self.wikiServerIPEdit.hide()
-            self.wikiServerPortButton.hide()
-            self.wikiServerPortEdit.hide()
-            self.symbiotTitle.hide()
-            self.symbiotServerIPButton.hide()
-            self.symbiotServerIPEdit.hide()
-            self.symbiotServerIPEdit.hide()
-            self.symbiotServerPortButton.hide()
-            self.symbiotServerPortEdit.hide()
-            self.symbiotIPButton.hide()
-            self.symbiotIPEdit.hide()
-            self.symbiotMACButton.hide()
-            self.symbiotMACEdit.hide()
+
             self.indexAudioButton.hide()
             self.indexAudioEdit.hide()
             self.indexAudioEnableDisableButton.hide()
@@ -3489,7 +3746,8 @@ class App(QMainWindow):
         global allow_wiki_local_server_configuration
 
         if allow_wiki_local_server_Bool == True:
-            self.useLocalWikiButton.setText('Disabled')
+            # self.useLocalWikiButton.setText('Disabled')
+            self.useLocalWikiButton.setIcon(QIcon("./Resources/image/feature_off_icon.png"))
             self.useLocalWikiButton.setStyleSheet(
                 """QPushButton {background-color: rgb(0, 0, 0);
                color: red;
@@ -3498,7 +3756,8 @@ class App(QMainWindow):
             allow_wiki_local_server_Bool = False
 
         elif allow_wiki_local_server_Bool == False:
-            self.useLocalWikiButton.setText('Enabled')
+            # self.useLocalWikiButton.setText('Enabled')
+            self.useLocalWikiButton.setIcon(QIcon("./Resources/image/feature_on_icon.png"))
             self.useLocalWikiButton.setStyleSheet(
                 """QPushButton {background-color: rgb(0, 0, 0);
                color: green;
@@ -3540,7 +3799,8 @@ class App(QMainWindow):
         global wiki_dictate_configuration
 
         if wiki_dictate_Bool == True:
-            self.dictateWikiButton.setText('Disabled')
+            # self.dictateWikiButton.setText('Disabled')
+            self.dictateWikiButton.setIcon(QIcon("./Resources/image/feature_off_icon.png"))
             self.dictateWikiButton.setStyleSheet(
                 """QPushButton {background-color: rgb(0, 0, 0);
                color: red;
@@ -3549,7 +3809,8 @@ class App(QMainWindow):
             wiki_dictate_Bool = False
 
         elif wiki_dictate_Bool == False:
-            self.dictateWikiButton.setText('Enabled')
+            # self.dictateWikiButton.setText('Enabled')
+            self.dictateWikiButton.setIcon(QIcon("./Resources/image/feature_on_icon.png"))
             self.dictateWikiButton.setStyleSheet(
                 """QPushButton {background-color: rgb(0, 0, 0);
                color: green;
@@ -3591,7 +3852,8 @@ class App(QMainWindow):
         global wiki_show_browser_configuration
 
         if wiki_show_browser_Bool == True:
-            self.wikiShowBrowserButton.setText('Disabled')
+            # self.wikiShowBrowserButton.setText('Disabled')
+            self.wikiShowBrowserButton.setIcon(QIcon("./Resources/image/feature_off_icon.png"))
             self.wikiShowBrowserButton.setStyleSheet(
                 """QPushButton {background-color: rgb(0, 0, 0);
                color: red;
@@ -3600,7 +3862,8 @@ class App(QMainWindow):
             wiki_show_browser_Bool = False
 
         elif wiki_show_browser_Bool == False:
-            self.wikiShowBrowserButton.setText('Enabled')
+            # self.wikiShowBrowserButton.setText('Enabled')
+            self.wikiShowBrowserButton.setIcon(QIcon("./Resources/image/feature_on_icon.png"))
             self.wikiShowBrowserButton.setStyleSheet(
                 """QPushButton {background-color: rgb(0, 0, 0);
                color: green;
